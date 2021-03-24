@@ -1,0 +1,5 @@
+X - BB-1 Map HTTP SSO json response to object
+//BB-2 Divvy up HTTP SSO class so that libs are easily replaceable
+//BB-3 Setup unit test library
+//BB-4 Update Http lib
+Logger

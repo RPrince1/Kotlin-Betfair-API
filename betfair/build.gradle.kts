@@ -1,3 +1,4 @@
+
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -16,7 +17,7 @@ repositories {
 }
 
 object Versions {
-	const val ktor = "1.5.0"
+	const val jacksonKotlin = "2.11.4"
 	const val okhttp = "4.8.0"
 }
 
@@ -26,10 +27,10 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.apache.httpcomponents:httpclient:4.5.13")
-//	implementation("org.jboss.spec.javax.net.ssl:jboss-jsse-api_8.0_spec:1.0.0.Final")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${Versions.jacksonKotlin}")
 
-	implementation("com.squareup.okhttp3:okhttp:${Versions.okhttp}")
-	implementation("com.squareup.okhttp3:okhttp-tls:${Versions.okhttp}")
+//	implementation("com.squareup.okhttp3:okhttp:${Versions.okhttp}")
+//	implementation("com.squareup.okhttp3:okhttp-tls:${Versions.okhttp}")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 
 }
