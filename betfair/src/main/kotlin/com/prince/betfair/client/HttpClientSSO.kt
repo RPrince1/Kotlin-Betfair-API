@@ -7,12 +7,15 @@ import com.prince.betfair.objects.Credentials
 import com.prince.betfair.objects.Token
 import com.prince.betfair.utils.HttpPost
 import com.prince.betfair.utils.Https
+import mu.KotlinLogging
 import org.apache.http.NameValuePair
 import org.apache.http.client.methods.CloseableHttpResponse
 import org.apache.http.message.BasicNameValuePair
 import org.apache.http.util.EntityUtils
 import org.springframework.stereotype.Component
 import java.util.*
+
+private val logger = KotlinLogging.logger {}
 
 @Component
 class HttpClientSSO(
@@ -31,6 +34,10 @@ class HttpClientSSO(
         val response: CloseableHttpResponse? = httpPost.execute()
 
         return objectMapper.readValue(EntityUtils.toString(response?.entity), Token::class.java)
+    }
+
+    fun nothing(): Boolean {
+        return true
     }
 }
 

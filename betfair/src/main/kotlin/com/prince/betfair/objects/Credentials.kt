@@ -1,9 +1,10 @@
 package com.prince.betfair.objects
 
-import org.springframework.stereotype.Component
+import org.springframework.context.annotation.Configuration
 import java.io.File
+import java.lang.IndexOutOfBoundsException
 
-@Component
+@Configuration
 class Credentials {
 
     private lateinit var email: String
@@ -16,9 +17,8 @@ class Credentials {
             email = credentials[0]
             password = credentials[1]
             keystorePassword = credentials[2]
-        } catch (e: ArrayIndexOutOfBoundsException) {
-            //TODO add logger
-            //logger.info("Not all credentials provided")
+        } catch (e: IndexOutOfBoundsException) {
+            throw IndexOutOfBoundsException("Not all credentials provided in credentials file")
         }
     }
 
