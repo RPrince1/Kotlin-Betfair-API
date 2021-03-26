@@ -1,8 +1,11 @@
 X - BB-1 Map HTTP SSO json response to object
 X = BB-2 Divvy up HTTP SSO class so that libs are easily replaceable
 X - BB-3 Import logging lib
-BB-4 Setup unit test library
+X - BB-4 Setup unit test library
 
 Update Http lib
 Config file
 Remove wild card imports
+Setup Kafka with docker compose offline, pull data for back-testing
+Write tests for credentials
+

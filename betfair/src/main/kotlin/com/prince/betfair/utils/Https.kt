@@ -1,6 +1,6 @@
 package com.prince.betfair.utils
 
-import com.prince.betfair.objects.Credentials
+import com.prince.betfair.client.Credentials
 import org.apache.http.client.methods.CloseableHttpResponse
 import org.apache.http.client.methods.HttpUriRequest
 import org.apache.http.conn.ClientConnectionManager

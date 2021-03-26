@@ -1,4 +1,4 @@
-package com.prince.betfair.objects
+package com.prince.betfair.client
 
 import org.springframework.context.annotation.Configuration
 import java.io.File

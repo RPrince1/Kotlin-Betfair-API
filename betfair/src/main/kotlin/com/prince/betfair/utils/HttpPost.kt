@@ -5,8 +5,10 @@ import org.apache.http.client.entity.UrlEncodedFormEntity
 import org.apache.http.client.methods.CloseableHttpResponse
 import org.apache.http.client.methods.HttpPost
 import org.apache.http.client.methods.HttpUriRequest
+import org.springframework.stereotype.Component
 import java.net.URI
 
+@Component
 class HttpPost(
     private val https: Https
 ) {

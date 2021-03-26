@@ -1,9 +1,6 @@
 package com.prince.betfair.client
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValues
-import com.prince.betfair.objects.Credentials
-import com.prince.betfair.objects.Token
 import com.prince.betfair.utils.HttpPost
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.core.spec.style.StringSpec
@@ -12,7 +9,6 @@ import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
-import org.apache.http.HttpEntity
 import org.apache.http.client.methods.CloseableHttpResponse
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -34,7 +30,7 @@ class HttpClientSSOTest: StringSpec({
 
 
         val mockR = mockk<CloseableHttpResponse>()
-        every { mockR.entity } returns httpEntity
+//        every { mockR.entity } returns httpEntity
 
         every {credentials.getEmail() } returns "email"
         every { credentials.getPassword() } returns "password"
