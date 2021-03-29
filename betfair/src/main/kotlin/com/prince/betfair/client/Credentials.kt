@@ -10,6 +10,7 @@ class Credentials {
     private lateinit var email: String
     private lateinit var password: String
     private lateinit var keystorePassword: String
+    private lateinit var applicationKey: String
     private val credentials = File("Credentials").readLines()
 
     init {
@@ -17,6 +18,7 @@ class Credentials {
             email = credentials[0]
             password = credentials[1]
             keystorePassword = credentials[2]
+            applicationKey = credentials[3]
         } catch (e: IndexOutOfBoundsException) {
             throw IndexOutOfBoundsException("Not all credentials provided in credentials file")
         }
@@ -25,4 +27,5 @@ class Credentials {
     fun getEmail(): String = email
     fun getPassword(): String = password
     fun getKeyStorePassword(): String = keystorePassword
+    fun getApplicationKey(): String = applicationKey
 }

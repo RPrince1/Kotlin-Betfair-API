@@ -8,6 +8,8 @@ import org.apache.http.conn.scheme.Scheme
 import org.apache.http.conn.ssl.SSLSocketFactory
 import org.apache.http.conn.ssl.StrictHostnameVerifier
 import org.apache.http.impl.client.DefaultHttpClient
+import org.springframework.beans.factory.config.ConfigurableBeanFactory
+import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
 import java.io.File
 import java.io.FileInputStream
@@ -19,6 +21,7 @@ import javax.net.ssl.KeyManagerFactory
 import javax.net.ssl.SSLContext
 
 @Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 class Https(
     private val credentials: Credentials
 ) {

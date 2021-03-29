@@ -37,7 +37,7 @@ class HttpClientSSOTest: StringSpec({
         every { httpPost.execute() } returns mockR
         every { objectMapper.readValue("lool", Token::class.java) } returns token
 
-        httpClientSSO.getToken() shouldBe token
+        httpClientSSO.login() shouldBe token
     }
 
 })

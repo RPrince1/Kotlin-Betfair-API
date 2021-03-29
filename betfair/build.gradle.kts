@@ -21,6 +21,7 @@ object Versions {
 	const val kotlinLogging = "2.0.6"
 	const val kotest = "4.4.3"
 	const val mockk = "1.11.0"
+	const val okhttp = "4.9.1"
 }
 
 dependencies {
@@ -32,6 +33,7 @@ dependencies {
 	implementation("org.apache.httpcomponents:httpclient:4.5.13")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${Versions.jacksonKotlin}")
 	implementation("io.github.microutils:kotlin-logging-jvm:${Versions.kotlinLogging}")
+	implementation("com.squareup.okhttp3:okhttp:${Versions.okhttp}")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.kotest:kotest-runner-junit5:${Versions.kotest}")
