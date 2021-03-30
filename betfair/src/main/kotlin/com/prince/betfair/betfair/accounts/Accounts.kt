@@ -8,9 +8,11 @@ import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
 
 private val logger = KotlinLogging.logger {}
 
+@Component
 class Accounts() {
 
     @Autowired
@@ -23,6 +25,10 @@ class Accounts() {
     private lateinit var wallet: Wallet
 
     val client = OkHttpClient()
+
+    fun getDeveloperAppKeys() {
+
+    }
 
     fun getAccountFunds(token: Token): AccountFundsResponse {
         //TODO change to base url

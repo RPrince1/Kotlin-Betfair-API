@@ -35,6 +35,8 @@ dependencies {
 	implementation("io.github.microutils:kotlin-logging-jvm:${Versions.kotlinLogging}")
 	implementation("com.squareup.okhttp3:okhttp:${Versions.okhttp}")
 
+	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.kotest:kotest-runner-junit5:${Versions.kotest}")
 	testImplementation("io.kotest:kotest-assertions-core:${Versions.kotest}")
