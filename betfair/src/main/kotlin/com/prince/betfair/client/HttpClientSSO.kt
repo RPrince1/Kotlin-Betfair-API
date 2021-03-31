@@ -1,44 +1,48 @@
 package com.prince.betfair.client
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.prince.betfair.utils.HttpPost
+import com.prince.betfair.betfair.accounts.AccountAPINGException
+import com.prince.betfair.config.Config
+import com.prince.betfair.config.Credentials
 import mu.KotlinLogging
-import org.apache.http.NameValuePair
-import org.apache.http.client.methods.CloseableHttpResponse
-import org.apache.http.message.BasicNameValuePair
-import org.apache.http.util.EntityUtils
-import org.springframework.beans.factory.annotation.Autowired
+import okhttp3.FormBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Component
-import java.util.*
 
 private val logger = KotlinLogging.logger {}
 
 @Component
-class HttpClientSSO() {
-
-    @Autowired
-    private lateinit var credentials: Credentials
-
-    @Autowired
-    private lateinit var objectMapper: ObjectMapper
-
-    @Autowired
-    private lateinit var httpPost: HttpPost
+class HttpClientSSO(
+    val credentials: Credentials,
+    val objectMapper: ObjectMapper,
+    val config: Config,
+    @Qualifier("https")
+    val client: OkHttpClient
+) {
 
     fun login(): Token? {
-        httpPost.setUri("https://identitysso-cert.betfair.com/api/certlogin")
-        val nvps: MutableList<NameValuePair> = ArrayList()
-        nvps.add(BasicNameValuePair("username", credentials.getEmail()))
-        nvps.add(BasicNameValuePair("password", credentials.getPassword()))
-        httpPost.setEntity(nvps)
-        httpPost.addHeader("X-Application", "appkey")
+        val request = Request.Builder()
+            .url(config.exchange.identityUrl)
+            .addHeader("Content-Type", "application/json")
+            .addHeader("Accept", "application/json")
+            .method(
+                "POST",
+                FormBody.Builder()
+                    .add("username", credentials.getEmail())
+                    .add("password", credentials.getPassword())
+                    .build()
+            )
+            .addHeader("X-Application", "appkey")
+            .build()
 
-        val response: CloseableHttpResponse? = httpPost.execute()
-        val entity = EntityUtils.toString(response?.entity)
+        val response = client.newCall(request).execute()
+        val body: String = response.body?.string() ?: throw AccountAPINGException("Response Body was null")
 
-        logger.info { entity }
-
-        //TODO Handle errors
-        return objectMapper.readValue(entity, Token::class.java)
+        logger.info { body }
+        return objectMapper.readValue(body, Token::class.java)
     }
 }
+
+

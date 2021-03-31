@@ -1,1 +1,7 @@
-url: "elloello"
+betfair:
+  exchange:
+    betting:
+    account:
+      url: "https://api.betfair.com/exchange/account/rest/v1.0/"
+    identity-url: "https://identitysso-cert.betfair.com/api/certlogin"
+

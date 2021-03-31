@@ -1,39 +1,42 @@
 package com.prince.betfair.betfair.accounts
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.prince.betfair.client.Credentials
+import com.prince.betfair.config.Credentials
 import com.prince.betfair.client.Token
+import com.prince.betfair.config.Config
 import mu.KotlinLogging
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 private val logger = KotlinLogging.logger {}
 
 @Component
-class Accounts() {
+class Accounts(
+    val objectMapper: ObjectMapper,
+    val credentials: Credentials,
+    val wallet: Wallet,
+    val config: Config,
+    val client: OkHttpClient
+) {
 
-    @Autowired
-    private lateinit var objectMapper: ObjectMapper
-
-    @Autowired
-    private lateinit var credentials: Credentials
-
-    @Autowired
-    private lateinit var wallet: Wallet
-
-    val client = OkHttpClient()
-
-    fun getDeveloperAppKeys() {
-
-    }
+// TODO
+//    fun getDeveloperAppKeys(token: Token): List<DeveloperApp> {
+//        val request = Request.Builder()
+//            .url("${config.exchange.account.url}getDeveloperAppKeys/")
+//            .addHeader("X-Authentication", token.sessionToken)
+//            .addHeader("Content-Type", "application/json")
+//            .addHeader("Accept", "application/json")
+//            .addHeader("Wallet", wallet.location.toString())
+//            .method("POST", FormBody.Builder().build())
+//            .build()
+//
+//    }
 
     fun getAccountFunds(token: Token): AccountFundsResponse {
-        //TODO change to base url
         val request = Request.Builder()
-            .url("https://api.betfair.com/exchange/account/rest/v1.0/getAccountFunds/")
+            .url("${config.exchange.account.url}getAccountFunds/")
             .addHeader("X-Authentication", token.sessionToken)
             .addHeader("X-Application", credentials.getApplicationKey())
             .addHeader("Content-Type", "application/json")
