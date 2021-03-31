@@ -17,7 +17,7 @@ class BettingBot(
         logger.info { "Program is running" }
 
         val token = httpClientSSO.login()
-//        val token = Token("kQabQFglxgKNr1bN6PN0PBOeOLVVUKZIqtHomJrS08U=", "SUCCESS")
+//        val token = Token("", "SUCCESS")
 //        if (token != null) {
 //            logger.info{ token.sessionToken }
 //            val funds = accounts.getAccountFunds(token)

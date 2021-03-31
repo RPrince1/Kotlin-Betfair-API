@@ -44,5 +44,3 @@ class HttpClientSSO(
         return objectMapper.readValue(body, Token::class.java)
     }
 }
-
-

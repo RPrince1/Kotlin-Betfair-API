@@ -1,16 +1,13 @@
 package com.prince.betfair.betfair.accounts
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.prince.betfair.config.Credentials
 import com.prince.betfair.client.Token
 import com.prince.betfair.config.Config
-import mu.KotlinLogging
+import com.prince.betfair.config.Credentials
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.springframework.stereotype.Component
-
-private val logger = KotlinLogging.logger {}
 
 @Component
 class Accounts(
