@@ -17,12 +17,12 @@ class BettingBot(
         logger.info { "Program is running" }
 
         val token = httpClientSSO.login()
-//        val token = Token("", "SUCCESS")
-//        if (token != null) {
-//            logger.info{ token.sessionToken }
+
+        if (token != null) {
+
 //            val funds = accounts.getAccountFunds(token)
-//
-//            logger.info{ funds.toString() }
-//        }
+            val devKey = accounts.getDeveloperAppKeys(token)
+            logger.info{ devKey.toString() }
+        }
     }
 }

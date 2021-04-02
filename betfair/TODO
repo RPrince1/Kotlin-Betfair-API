@@ -2,8 +2,8 @@ X - BB-1 Map HTTP SSO json response to object
 X = BB-2 Divvy up HTTP SSO class so that libs are easily replaceable
 X - BB-3 Import logging lib
 X - BB-4 Setup unit test library
-BB-5 Implement account operations
-X - BB-6 Update Http libq
+X - BB-5 Implement account operations
+X - BB-6 Update Http lib
 X - BB-7 Config file
 
 // List of tickets to do
@@ -11,6 +11,8 @@ Remove wild card imports
 Setup Kafka with docker compose offline, pull data for back-testing
 Write tests again
 Implement Betting operations
+Add linter
+Use the developer app key function for getAccountFunds (also make it env specific)
 
 Update performance https://docs.developer.betfair.com/display/1smk3cen4v3lu3yomq5qye0ni/Optimizing+API+Application+Performance
 

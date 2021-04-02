@@ -1,7 +1,7 @@
 package com.prince.betfair.client
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.prince.betfair.betfair.accounts.AccountAPINGException
+import com.prince.betfair.betfair.accounts.exception.AccountAPINGException
 import com.prince.betfair.config.Config
 import com.prince.betfair.config.Credentials
 import mu.KotlinLogging

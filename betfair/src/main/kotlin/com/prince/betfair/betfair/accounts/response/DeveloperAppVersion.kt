@@ -1,4 +1,4 @@
-package com.prince.betfair.betfair.accounts
+package com.prince.betfair.betfair.accounts.response
 
 data class DeveloperAppVersion(
     val owner: String,
@@ -8,7 +8,5 @@ data class DeveloperAppVersion(
     val delayData: Boolean,
     val subscriptionRequired: Boolean,
     val ownerManaged: Boolean,
-    val active: Boolean,
-    val vendorId: String,
-    val vendorSecret: String
+    val active: Boolean
 )

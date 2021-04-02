@@ -1,4 +1,4 @@
-package com.prince.betfair.betfair.accounts
+package com.prince.betfair.betfair.accounts.response
 
 data class DeveloperApp(
     val appName: String,

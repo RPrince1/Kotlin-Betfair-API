@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Primary
 
 @Configuration
 class HttpClientConfiguration {
+
     @Primary
     @Bean("http")
     fun httpClient(): OkHttpClient {
