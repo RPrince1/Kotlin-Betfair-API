@@ -32,7 +32,11 @@ class Accounts(
             .build()
 
         val response = client.newCall(request).execute()
-        val body: String = response.body?.string() ?: throw AccountAPINGException("getDeveloperAppKeys response null")
+
+        val body = when {
+            response.isSuccessful -> response.body?.string() ?: throw AccountAPINGException("Response body empty")
+            else -> throw AccountAPINGException("Response code: ${response.code}, reason: ${response.body}")
+        }
 
         return objectMapper.readValue(body)
     }

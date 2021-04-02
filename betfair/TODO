@@ -5,9 +5,9 @@ X - BB-4 Setup unit test library
 X - BB-5 Implement account operations
 X - BB-6 Update Http lib
 X - BB-7 Config file
+BB-8 Write tests for new structure
 
-// List of tickets to do
-Remove wild card imports
+// List of tickets to d
 Setup Kafka with docker compose offline, pull data for back-testing
 Write tests again
 Implement Betting operations
