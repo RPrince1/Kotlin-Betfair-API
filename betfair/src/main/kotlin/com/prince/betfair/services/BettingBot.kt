@@ -20,9 +20,9 @@ class BettingBot(
 
         if (token != null) {
 
-//            val funds = accounts.getAccountFunds(token)
-            val devKey = accounts.getDeveloperAppKeys(token)
-            logger.info{ devKey.toString() }
+            val funds = accounts.getAccountFunds(token)
+//            val devKey = accounts.getDeveloperAppKeys(token)
+//            logger.info{ devKey.toString() }
         }
     }
 }

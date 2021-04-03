@@ -3,6 +3,7 @@ package com.prince.betfair.betfair
 import com.prince.betfair.betfair.accounts.Accounts
 import com.prince.betfair.betfair.accounts.Wallet
 import com.prince.betfair.betfair.accounts.exception.AccountAPINGException
+import com.prince.betfair.betfair.accounts.response.AccountFundsResponse
 import com.prince.betfair.betfair.accounts.response.DeveloperApp
 import com.prince.betfair.betfair.accounts.response.DeveloperAppVersion
 import com.prince.betfair.client.Token
@@ -10,13 +11,17 @@ import com.prince.betfair.config.Config
 import com.prince.betfair.config.Credentials
 import com.prince.betfair.config.JacksonConfiguration
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
+import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
+import io.mockk.verify
 import okhttp3.OkHttpClient
 import okhttp3.Response
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(MockKExtension::class)
@@ -30,9 +35,15 @@ class AccountsTest: StringSpec({
     val response = mockk<Response>(relaxUnitFun = true)
 
     val token = Token("sessionToken", "SUCCESS")
+    val url = "https://www.betfair.com"
 
-    "Given a 200 response, when getDeveloperAppKeys is called List<DeveloperApp> is returned" {
+    @AnnotationSpec.AfterEach
+    fun after() {
+        clearAllMocks()
+    }
 
+    //getDeveloperKeys
+    "Given a 200 response, when getDeveloperAppKeys is called then List<DeveloperApp> is returned" {
         val developerAppVersion = DeveloperAppVersion(
             "owner",
             123L,
@@ -55,33 +66,128 @@ class AccountsTest: StringSpec({
             "active":true}]}]
         """.trimIndent()
 
-        every { response.body?.string()  } returns jsonResult
-        every { response.isSuccessful  } returns true
+        every { configMock.exchange.account.url } returns url
         every { clientMock.newCall(any()).execute() } returns response
-        every { configMock.exchange.account.url } returns "https://www.betfair.com"
+        every { response.body } returns jsonResult.toResponseBody()
+        every { response.isSuccessful  } returns true
 
         val account = Accounts(objectMapper, credentialsMock, walletMock, configMock, clientMock)
-        val developerApp = account.getDeveloperAppKeys(token)
+        val result = account.getDeveloperAppKeys(token)
 
-        developerApp shouldBe listOf(expectedDeveloperApp)
+        verify { configMock.exchange.account.url }
+        verify { clientMock.newCall(any()).execute() }
+
+        result shouldBe listOf(expectedDeveloperApp)
     }
 
-    "Given a non-200 response when getDeveloperAppKeys is called throws an AccountAPINGException" {
-        every { configMock.exchange.account.url } returns "https://www.betfair.com"
+    "Given a non-200 response when getDeveloperAppKeys is called then throws an AccountAPINGException" {
+        every { configMock.exchange.account.url } returns url
         every { clientMock.newCall(any()).execute() } returns response
-        every { response.code } returns 400
-        every { response.body.toString() } returns "Bad request"
+        every { response.body?.toString() } returns "Bad request"
+        every { response.code } returns 401
         every { response.isSuccessful  } returns false
+
         val account = Accounts(objectMapper, credentialsMock, walletMock, configMock, clientMock)
 
         val exception = shouldThrow<AccountAPINGException> {
             account.getDeveloperAppKeys(token)
         }
 
-        exception.message shouldBe "Response code: 400, reason: Bad request"
+        verify { configMock.exchange.account.url }
+
+        exception.message shouldBe "Response code: 401, reason: Bad request"
     }
 
-    "Given an empty response body, getDeveloperAppKeys throws an AccountAPINGException" {
+    "Given a null response body, when getDeveloperAppKeys is called then throws an AccountAPINGException" {
+        every { configMock.exchange.account.url } returns url
+        every { clientMock.newCall(any()).execute() } returns response
+        every { response.body } returns null
+        every { response.code } returns 402
+        every { response.isSuccessful } returns true
 
+        val account = Accounts(objectMapper, credentialsMock, walletMock, configMock, clientMock)
+
+        val exception = shouldThrow<AccountAPINGException> {
+            account.getDeveloperAppKeys(token)
+        }
+
+        verify { configMock.exchange.account.url }
+
+        exception.message shouldBe "Response body is null"
     }
+
+    "Given a 200 response, when getAccountFunds is called then returns AccountFundsResponse" {
+        val jsonResult = """
+            {"availableToBetBalance":102,"exposure":1.0,"retainedCommission":2.0,"exposureLimit":3.0,
+            "discountRate":4.0,"pointsBalance":5}
+        """.trimIndent()
+
+        val expectedAccountFundsResponse = AccountFundsResponse(
+            102.toDouble(),
+            1.toDouble(),
+            2.toDouble(),
+            3.toDouble(),
+            4.toDouble(),
+            5
+        )
+
+        every { configMock.exchange.account.url } returns url
+        every { credentialsMock.getApplicationKey() } returns "appKey"
+        every { walletMock.location.toString() } returns "UK"
+        every { clientMock.newCall(any()).execute() } returns response
+        every { response.body?.string()  } returns jsonResult
+        every { response.isSuccessful  } returns true
+
+        val account = Accounts(objectMapper, credentialsMock, walletMock, configMock, clientMock)
+        val result = account.getAccountFunds(token)
+
+        verify { configMock.exchange.account.url }
+        verify { credentialsMock.getApplicationKey() }
+        verify { walletMock.location.toString() }
+
+        result shouldBe expectedAccountFundsResponse
+    }
+
+    "Given a non-200 response, when getAccountFunds is called then it throws an AccountAPINGException" {
+        every { configMock.exchange.account.url } returns url
+        every { credentialsMock.getApplicationKey() } returns "appKey"
+        every { walletMock.location.toString() } returns "UK"
+        every { clientMock.newCall(any()).execute() } returns response
+        every { response.body.toString() } returns "Bad request"
+        every { response.code } returns 403
+        every { response.isSuccessful  } returns false
+
+        val account = Accounts(objectMapper, credentialsMock, walletMock, configMock, clientMock)
+        val exception = shouldThrow<AccountAPINGException> {
+            account.getAccountFunds(token)
+        }
+
+        verify { configMock.exchange.account.url }
+        verify { credentialsMock.getApplicationKey() }
+        verify { walletMock.location.toString() }
+
+        exception.message shouldBe "Response code: 403, reason: Bad request"
+    }
+
+    "Given a null response, when getAccountFunds is called then it throws an AccountAPINGException" {
+        every { configMock.exchange.account.url } returns url
+        every { credentialsMock.getApplicationKey() } returns "appKey"
+        every { walletMock.location.toString() } returns "UK"
+        every { clientMock.newCall(any()).execute() } returns response
+        every { response.body } returns null
+        every { response.code } returns 404
+        every { response.isSuccessful } returns true
+
+        val account = Accounts(objectMapper, credentialsMock, walletMock, configMock, clientMock)
+        val exception = shouldThrow<AccountAPINGException> {
+            account.getAccountFunds(token)
+        }
+
+        verify { configMock.exchange.account.url }
+        verify { credentialsMock.getApplicationKey() }
+        verify { walletMock.location.toString() }
+
+        exception.message shouldBe "Response body is null"
+    }
+
 })

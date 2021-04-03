@@ -34,7 +34,7 @@ class Accounts(
         val response = client.newCall(request).execute()
 
         val body = when {
-            response.isSuccessful -> response.body?.string() ?: throw AccountAPINGException("Response body empty")
+            response.isSuccessful -> response.body?.string() ?: throw AccountAPINGException("Response body is null")
             else -> throw AccountAPINGException("Response code: ${response.code}, reason: ${response.body}")
         }
 
@@ -53,9 +53,12 @@ class Accounts(
             .build()
 
         val response = client.newCall(request).execute()
-        val body: String = response.body?.string() ?: throw AccountAPINGException("Response Body was null")
+
+        val body = when {
+            response.isSuccessful -> response.body?.string() ?: throw AccountAPINGException("Response body is null")
+            else -> throw AccountAPINGException("Response code: ${response.code}, reason: ${response.body}")
+        }
 
         return objectMapper.readValue(body, AccountFundsResponse::class.java)
     }
-
 }
