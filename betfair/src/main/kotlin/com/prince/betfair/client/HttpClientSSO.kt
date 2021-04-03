@@ -1,7 +1,7 @@
 package com.prince.betfair.client
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.prince.betfair.betfair.accounts.exception.AccountAPINGException
+import com.prince.betfair.client.exception.ClientException
 import com.prince.betfair.config.Config
 import com.prince.betfair.config.Credentials
 import mu.KotlinLogging
@@ -38,7 +38,10 @@ class HttpClientSSO(
             .build()
 
         val response = client.newCall(request).execute()
-        val body: String = response.body?.string() ?: throw AccountAPINGException("Response Body was null")
+        val body = when {
+            response.isSuccessful -> response.body?.string() ?: throw ClientException("Response body is null")
+            else -> throw ClientException("Response code: ${response.code}, reason: ${response.body}")
+        }
 
         logger.info { body }
         return objectMapper.readValue(body, Token::class.java)

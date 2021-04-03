@@ -9,7 +9,7 @@ private val logger = KotlinLogging.logger {}
 
 @Service
 class BettingBot(
-    private final val httpClientSSO: HttpClientSSO,
+    private val httpClientSSO: HttpClientSSO,
     val accounts: Accounts
 ) {
 
@@ -20,7 +20,7 @@ class BettingBot(
 
         if (token != null) {
 
-            val funds = accounts.getAccountFunds(token)
+//            val funds = accounts.getAccountFunds(token)
 //            val devKey = accounts.getDeveloperAppKeys(token)
 //            logger.info{ devKey.toString() }
         }

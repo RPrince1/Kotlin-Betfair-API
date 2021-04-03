@@ -59,7 +59,6 @@ class AccountsTest: StringSpec({
             123L,
             listOf(developerAppVersion)
         )
-
         val jsonResult = """
             [{"appName":"appName","appId":123,"appVersions":[{"owner":"owner","versionId":123,"version":"version",
             "applicationKey":"appKey","delayData":true,"subscriptionRequired":true,"ownerManaged":true,
@@ -117,11 +116,6 @@ class AccountsTest: StringSpec({
     }
 
     "Given a 200 response, when getAccountFunds is called then returns AccountFundsResponse" {
-        val jsonResult = """
-            {"availableToBetBalance":102,"exposure":1.0,"retainedCommission":2.0,"exposureLimit":3.0,
-            "discountRate":4.0,"pointsBalance":5}
-        """.trimIndent()
-
         val expectedAccountFundsResponse = AccountFundsResponse(
             102.toDouble(),
             1.toDouble(),
@@ -130,6 +124,10 @@ class AccountsTest: StringSpec({
             4.toDouble(),
             5
         )
+        val jsonResult = """
+            {"availableToBetBalance":102,"exposure":1.0,"retainedCommission":2.0,"exposureLimit":3.0,
+            "discountRate":4.0,"pointsBalance":5}
+        """.trimIndent()
 
         every { configMock.exchange.account.url } returns url
         every { credentialsMock.getApplicationKey() } returns "appKey"
