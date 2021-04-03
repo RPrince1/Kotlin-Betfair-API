@@ -3,9 +3,9 @@ package com.prince.betfair.betfair
 import com.prince.betfair.betfair.accounts.Accounts
 import com.prince.betfair.betfair.accounts.Wallet
 import com.prince.betfair.betfair.accounts.exception.AccountAPINGException
-import com.prince.betfair.betfair.accounts.response.AccountFundsResponse
-import com.prince.betfair.betfair.accounts.response.DeveloperApp
-import com.prince.betfair.betfair.accounts.response.DeveloperAppVersion
+import com.prince.betfair.betfair.accounts.entities.AccountFundsResponse
+import com.prince.betfair.betfair.accounts.entities.DeveloperApp
+import com.prince.betfair.betfair.accounts.entities.DeveloperAppVersion
 import com.prince.betfair.client.Token
 import com.prince.betfair.config.Config
 import com.prince.betfair.config.Credentials

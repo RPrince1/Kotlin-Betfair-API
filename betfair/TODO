@@ -6,11 +6,13 @@ X - BB-5 Implement account operations
 X - BB-6 Update Http lib
 X - BB-7 Config file
 X - BB-8 Write tests for new structure
+BB-9 Implement Betting operations
 
-// List of tickets to d
+// List of tickets to do
 Setup Kafka with docker compose offline, pull data for back-testing
-Write tests again
-Implement Betting operations
+Add Heartbeat API
+Implement token refresh
+
 Add linter
 Use the developer app key function for getAccountFunds (also make it env specific)
 

@@ -3,8 +3,8 @@ package com.prince.betfair.betfair.accounts
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.prince.betfair.betfair.accounts.exception.AccountAPINGException
-import com.prince.betfair.betfair.accounts.response.AccountFundsResponse
-import com.prince.betfair.betfair.accounts.response.DeveloperApp
+import com.prince.betfair.betfair.accounts.entities.AccountFundsResponse
+import com.prince.betfair.betfair.accounts.entities.DeveloperApp
 import com.prince.betfair.client.Token
 import com.prince.betfair.config.Config
 import com.prince.betfair.config.Credentials
@@ -15,11 +15,11 @@ import org.springframework.stereotype.Component
 
 @Component
 class Accounts(
-    val objectMapper: ObjectMapper,
-    val credentials: Credentials,
-    val wallet: Wallet,
-    val config: Config,
-    val client: OkHttpClient
+    private val objectMapper: ObjectMapper,
+    private val credentials: Credentials,
+    private val wallet: Wallet,
+    private val config: Config,
+    private val client: OkHttpClient
 ) {
 
     fun getDeveloperAppKeys(token: Token): List<DeveloperApp> {
