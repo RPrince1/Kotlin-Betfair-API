@@ -1,7 +1,5 @@
-package com.prince.betfair.betfair
+package com.prince.betfair.betfair.accounts
 
-import com.prince.betfair.betfair.accounts.Accounts
-import com.prince.betfair.betfair.accounts.Wallet
 import com.prince.betfair.betfair.accounts.exception.AccountAPINGException
 import com.prince.betfair.betfair.accounts.entities.AccountFundsResponse
 import com.prince.betfair.betfair.accounts.entities.DeveloperApp

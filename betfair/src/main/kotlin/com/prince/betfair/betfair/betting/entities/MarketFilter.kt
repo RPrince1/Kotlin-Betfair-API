@@ -1,8 +1,10 @@
 package com.prince.betfair.betfair.betting.entities
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.prince.betfair.betfair.betting.enums.MarketBettingType
 import com.prince.betfair.betfair.betting.enums.OrderStatus
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 data class MarketFilter(
     val textQuery: String? = null,
     val eventTypeIds: Set<String>? = null,

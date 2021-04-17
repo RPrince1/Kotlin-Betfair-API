@@ -4,6 +4,7 @@ import com.prince.betfair.betfair.accounts.Accounts
 import com.prince.betfair.betfair.betting.Betting
 import com.prince.betfair.betfair.betting.entities.MarketFilter
 import com.prince.betfair.client.HttpClientSSO
+import com.prince.betfair.client.Token
 import mu.KotlinLogging
 import org.springframework.stereotype.Service
 
@@ -19,15 +20,15 @@ class BettingBot(
     init {
         logger.info { "Program is running" }
 
-        val token = httpClientSSO.login()
+//        val token = httpClientSSO.login()
 
+        val token = Token("", "SUCCESS")
         if (token != null) {
 
-            betting.listEventTypes(MarketFilter(), null, token)
+            val events = betting.listEventTypes(MarketFilter(), null, 10, token)
+            val horseRacing = events.find { it.eventType.name == "Horse Racing" }
 
-//            val funds = accounts.getAccountFunds(token)
-//            val devKey = accounts.getDeveloperAppKeys(token)
-//            logger.info{ devKey.toString() }
+
         }
     }
 }
