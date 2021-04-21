@@ -1,8 +1,0 @@
-betfair:
-  exchange:
-    betting:
-      url: "https://api.betfair.com/exchange/betting/rest/v1.0/"
-    account:
-      url: "https://api.betfair.com/exchange/account/rest/v1.0/"
-    identity-url: "https://identitysso-cert.betfair.com/api/certlogin"
-
