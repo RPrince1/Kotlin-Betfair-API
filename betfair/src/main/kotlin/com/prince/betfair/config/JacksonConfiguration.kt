@@ -6,8 +6,6 @@ import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import org.springframework.context.annotation.Bean
 
 class JacksonConfiguration {
-
-    @Bean
-    fun mapper() = ObjectMapper().registerKotlinModule()
+    fun mapper(): ObjectMapper = ObjectMapper().registerKotlinModule()
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 }

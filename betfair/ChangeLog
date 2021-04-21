@@ -7,15 +7,15 @@ X - BB-6 Update Http lib
 X - BB-7 Config file
 X - BB-8 Write tests for new structure
 BB-9 Implement Betting operations
+BB-10 Convert to Library
 
 // List of tickets to do
-Setup Kafka with docker compose offline, pull data for back-testing
+Make tests more specific, requests headers/parameters aren't validated in tests
+Decide if the Object Mapper is a parameter you want to give to the Consumer
 Add Heartbeat API
 Implement token refresh
-
 Add linter
 Use the developer app key function for getAccountFunds (also make it env specific)
-
 Update performance https://docs.developer.betfair.com/display/1smk3cen4v3lu3yomq5qye0ni/Optimizing+API+Application+Performance
 
 // Questions

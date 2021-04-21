@@ -6,27 +6,30 @@ import com.prince.betfair.betfair.betting.entities.EventTypeResult
 import com.prince.betfair.betfair.betting.entities.MarketFilter
 import com.prince.betfair.betfair.betting.exception.APINGException
 import com.prince.betfair.client.Token
-import com.prince.betfair.config.Config
-import com.prince.betfair.config.Credentials
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import org.springframework.stereotype.Component
 
-@Component
 class Betting(
-    private val config: Config,
     private val client: OkHttpClient,
-    private val objectMapper: ObjectMapper,
-    private val credentials: Credentials
+    private val objectMapper: ObjectMapper
 ) {
 
+    private val bettingUrl = "https://api.betfair.com/exchange/betting/rest/v1.0/"
+
     //Returns a list of Event Types (i.e. Sports) associated with the markets selected by the MarketFilter.
-    fun listEventTypes(filter: MarketFilter, locale: String? = null, maxResults: Int, token: Token): List<EventTypeResult> {
+    fun listEventTypes(
+        filter: MarketFilter,
+        //TODO add locale
+        locale: String? = null,
+        maxResults: Int,
+        token: Token,
+        applicationKey: String
+    ): List<EventTypeResult> {
         val request = Request.Builder()
-            .url("${config.exchange.betting.url}listEventTypes/")
+            .url("${bettingUrl}listEventTypes/")
             .addHeader("X-Authentication", token.sessionToken)
-            .addHeader("X-Application", credentials.getApplicationKey())
+            .addHeader("X-Application", applicationKey)
             .addHeader("Content-Type", "application/json")
             .addHeader("Accept", "application/json")
             .post(
