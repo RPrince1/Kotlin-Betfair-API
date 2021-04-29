@@ -1,11 +1,9 @@
 package com.prince.betfair.betfair.accounts
 
-import com.prince.betfair.betfair.accounts.exception.AccountAPINGException
 import com.prince.betfair.betfair.accounts.entities.AccountFundsResponse
 import com.prince.betfair.betfair.accounts.entities.DeveloperApp
 import com.prince.betfair.betfair.accounts.entities.DeveloperAppVersion
-import com.prince.betfair.client.Token
-import com.prince.betfair.config.JacksonConfiguration
+import com.prince.betfair.betfair.accounts.exception.AccountAPINGException
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.core.spec.style.StringSpec
@@ -23,12 +21,11 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(MockKExtension::class)
 class AccountsTest: StringSpec({
 
-    val objectMapper = JacksonConfiguration().mapper()
     val walletMock =  mockk<Wallet>(relaxUnitFun = true)
     val clientMock = mockk<OkHttpClient>(relaxUnitFun = true)
     val response = mockk<Response>(relaxUnitFun = true)
 
-    val token = Token("sessionToken", "SUCCESS")
+    val sessionToken = "sessionToken"
     val appKey = "appKey"
 
     @AnnotationSpec.AfterEach
@@ -63,8 +60,8 @@ class AccountsTest: StringSpec({
         every { response.body } returns jsonResult.toResponseBody()
         every { response.isSuccessful  } returns true
 
-        val account = Accounts(objectMapper, walletMock, clientMock)
-        val result = account.getDeveloperAppKeys(token)
+        val account = Accounts(clientMock)
+        val result = account.getDeveloperAppKeys(sessionToken)
 
         result shouldBe listOf(expectedDeveloperApp)
     }
@@ -75,10 +72,10 @@ class AccountsTest: StringSpec({
         every { response.code } returns 401
         every { response.isSuccessful  } returns false
 
-        val account = Accounts(objectMapper, walletMock, clientMock)
+        val account = Accounts(clientMock)
 
         val exception = shouldThrow<AccountAPINGException> {
-            account.getDeveloperAppKeys(token)
+            account.getDeveloperAppKeys(sessionToken)
         }
 
         exception.message shouldBe "Response code: 401, reason: Bad request"
@@ -90,10 +87,10 @@ class AccountsTest: StringSpec({
         every { response.code } returns 402
         every { response.isSuccessful } returns true
 
-        val account = Accounts(objectMapper, walletMock, clientMock)
+        val account = Accounts(clientMock)
 
         val exception = shouldThrow<AccountAPINGException> {
-            account.getDeveloperAppKeys(token)
+            account.getDeveloperAppKeys(sessionToken)
         }
 
         exception.message shouldBe "Response body is null"
@@ -118,8 +115,8 @@ class AccountsTest: StringSpec({
         every { response.body?.string()  } returns jsonResult
         every { response.isSuccessful  } returns true
 
-        val account = Accounts(objectMapper, walletMock, clientMock)
-        val result = account.getAccountFunds(token, appKey)
+        val account = Accounts(clientMock)
+        val result = account.getAccountFunds(sessionToken, appKey, walletMock)
 
         verify { walletMock.location.toString() }
 
@@ -133,9 +130,9 @@ class AccountsTest: StringSpec({
         every { response.code } returns 403
         every { response.isSuccessful  } returns false
 
-        val account = Accounts(objectMapper, walletMock, clientMock)
+        val account = Accounts(clientMock)
         val exception = shouldThrow<AccountAPINGException> {
-            account.getAccountFunds(token, appKey)
+            account.getAccountFunds(sessionToken, appKey, walletMock)
         }
 
         verify { walletMock.location.toString() }
@@ -150,9 +147,9 @@ class AccountsTest: StringSpec({
         every { response.code } returns 404
         every { response.isSuccessful } returns true
 
-        val account = Accounts(objectMapper, walletMock, clientMock)
+        val account = Accounts(clientMock)
         val exception = shouldThrow<AccountAPINGException> {
-            account.getAccountFunds(token, appKey)
+            account.getAccountFunds(sessionToken, appKey, walletMock)
         }
 
         verify { walletMock.location.toString() }

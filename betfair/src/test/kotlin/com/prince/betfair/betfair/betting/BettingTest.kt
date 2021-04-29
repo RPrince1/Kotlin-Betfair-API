@@ -4,8 +4,6 @@ import com.prince.betfair.betfair.betting.entities.EventType
 import com.prince.betfair.betfair.betting.entities.EventTypeResult
 import com.prince.betfair.betfair.betting.entities.MarketFilter
 import com.prince.betfair.betfair.betting.exception.APINGException
-import com.prince.betfair.client.Token
-import com.prince.betfair.config.JacksonConfiguration
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.core.spec.style.StringSpec
@@ -19,11 +17,10 @@ import okhttp3.ResponseBody.Companion.toResponseBody
 
 class BettingTest : StringSpec({
 
-    val objectMapper = JacksonConfiguration().mapper()
     val clientMock = mockk<OkHttpClient>(relaxUnitFun = true)
     val response = mockk<Response>(relaxUnitFun = true)
 
-    val token = Token("sessionToken", "SUCCESS")
+    val sessionToken = "sessionToken"
     val appKey = "appKey"
 
     @AnnotationSpec.AfterEach
@@ -46,8 +43,8 @@ class BettingTest : StringSpec({
 
         val marketFilter = MarketFilter()
 
-        val betting = Betting(clientMock, objectMapper)
-        val result = betting.listEventTypes(marketFilter, null, 10, token, appKey)
+        val betting = Betting(clientMock)
+        val result = betting.listEventTypes(marketFilter, null, 10, sessionToken, appKey)
 
         result shouldBe listOf(expectedEventTypeResult)
     }
@@ -59,10 +56,10 @@ class BettingTest : StringSpec({
         every { response.code } returns 409
 
         val marketFilter = MarketFilter()
-        val betting = Betting(clientMock, objectMapper)
+        val betting = Betting(clientMock)
 
         val exception = shouldThrow<APINGException> {
-            betting.listEventTypes(marketFilter, null, 10, token, appKey)
+            betting.listEventTypes(marketFilter, null, 10, sessionToken, appKey)
         }
 
         exception.message shouldBe "Response code: 409, reason: Error"
@@ -74,10 +71,10 @@ class BettingTest : StringSpec({
         every { response.isSuccessful } returns true
 
         val marketFilter = MarketFilter()
-        val betting = Betting(clientMock, objectMapper)
+        val betting = Betting(clientMock)
 
         val exception = shouldThrow<APINGException> {
-            betting.listEventTypes(marketFilter, null, 10, token, appKey)
+            betting.listEventTypes(marketFilter, null, 10, sessionToken, appKey)
         }
 
         exception.message shouldBe "Response body is null"

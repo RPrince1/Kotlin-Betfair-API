@@ -1,9 +1,6 @@
 package com.prince.betfair.config
 
 import okhttp3.OkHttpClient
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
-import java.io.File
 import java.io.InputStream
 import java.security.KeyStore
 import java.security.SecureRandom
@@ -15,9 +12,9 @@ import javax.net.ssl.X509TrustManager
 class HttpsClientConfiguration(
     private val p12: InputStream,
     private val keystorePassword: String,
-) : ClientConfiguration {
+) {
 
-    override lateinit var client: OkHttpClient
+    lateinit var client: OkHttpClient
 
     init {
         val keystore = KeyStore.getInstance("PKCS12").apply {
