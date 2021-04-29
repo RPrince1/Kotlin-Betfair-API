@@ -28,9 +28,9 @@ class HttpClientSSOTest: StringSpec({
         MockKAnnotations.init(this, relaxUnitFun = true)
     }
 
-    "Given a successful response, when the loginStatus is SUCCEEDED then returns a SSOID.Success" {
+    "Given a successful response, when the loginStatus is SUCCESS then returns a SSOID.Success" {
         val sessionToken = "sessionToken"
-        val loginStatus = "SUCCEEDED"
+        val loginStatus = "SUCCESS"
         val expectedSSOID = SSOID.Success(sessionToken)
         val jsonResult = """{"sessionToken":"$sessionToken","loginStatus":"$loginStatus"}"""
 
@@ -43,7 +43,7 @@ class HttpClientSSOTest: StringSpec({
         result shouldBe expectedSSOID
     }
 
-    "Given a successful response, when the loginStatus is not SUCCEEDED then returns SSOID.Failure" {
+    "Given a successful response, when the loginStatus is not SUCCESS then returns SSOID.Failure" {
         val sessionToken = "sessionToken"
         val loginStatus = "FAILED"
         val expectedSSOID = SSOID.Failure(loginStatus)

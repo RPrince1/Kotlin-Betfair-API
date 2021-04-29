@@ -36,7 +36,7 @@ class ClientSSO(
         val body = getBody(response)
         val loginResponse = objectMapper.readValue(body, LoginResponse::class.java)
 
-        return if (loginResponse.loginStatus == "SUCCEEDED" && !loginResponse.sessionToken.isNullOrEmpty()) {
+        return if (loginResponse.loginStatus == "SUCCESS" && !loginResponse.sessionToken.isNullOrEmpty()) {
             Success(loginResponse.sessionToken)
         } else {
             Failure(loginResponse.loginStatus)

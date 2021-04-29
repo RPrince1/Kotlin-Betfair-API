@@ -7,7 +7,7 @@ X - BB-6 Update Http lib
 X - BB-7 Config file
 X - BB-8 Write tests for new structure
 BB-9 Implement Betting operations
-BB-10 Convert to Library
+X - BB-10 Convert to Library
 
 // List of tickets to do
 Make tests more specific, requests headers/parameters aren't validated in tests
