@@ -13,10 +13,8 @@ Logging in using single sign-on
 
 Using Accounts
 
-    val httpClient = OkHttpClient()
-    val accounts = Accounts(httpClient)
+    val accounts = Accounts()
 
 Using Betting
 
-    val httpClient = OkHttpClient()
-    val betting = Betting(httpClient)
+    val betting = Betting()

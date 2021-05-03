@@ -10,7 +10,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 
 class Accounts(
-    private val client: OkHttpClient
+    private val client: OkHttpClient = OkHttpClient()
 ) {
 
     private val objectMapper = JacksonConfiguration().mapper()
