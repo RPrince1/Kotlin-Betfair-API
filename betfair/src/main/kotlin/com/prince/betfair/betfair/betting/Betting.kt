@@ -27,10 +27,7 @@ class Betting(
     ): List<EventTypeResult> {
         val request = Request.Builder()
             .url("${bettingUrl}listEventTypes/")
-            .addHeader("X-Authentication", sessionToken)
-            .addHeader("X-Application", applicationKey)
-            .addHeader("Content-Type", "application/json")
-            .addHeader("Accept", "application/json")
+            .addDefaultHeaders(sessionToken, applicationKey)
             .post(
                 objectMapper.writeValueAsString(
                     mapOf(
@@ -62,10 +59,7 @@ class Betting(
     ): List<CompetitionResult> {
         val request = Request.Builder()
             .url("${bettingUrl}listCompetitions/")
-            .addHeader("X-Authentication", sessionToken)
-            .addHeader("X-Application", applicationKey)
-            .addHeader("Content-Type", "application/json")
-            .addHeader("Accept", "application/json")
+            .addDefaultHeaders(sessionToken, applicationKey)
             .post(
                 objectMapper.writeValueAsString(
                     mapOf(
@@ -94,13 +88,10 @@ class Betting(
         maxResults: Int,
         sessionToken: String,
         applicationKey: String
-    ) : List<TimeRangeResult> {
+    ): List<TimeRangeResult> {
         val request = Request.Builder()
             .url("${bettingUrl}listTimeRanges/")
-            .addHeader("X-Authentication", sessionToken)
-            .addHeader("X-Application", applicationKey)
-            .addHeader("Content-Type", "application/json")
-            .addHeader("Accept", "application/json")
+            .addDefaultHeaders(sessionToken, applicationKey)
             .post(
                 objectMapper.writeValueAsString(
                     mapOf(
@@ -122,4 +113,44 @@ class Betting(
 
         return objectMapper.readValue(body)
     }
+    
+    fun listEvents(
+        filter: MarketFilter,
+        locale: String? = null,
+        maxResults: Int? = null,
+        sessionToken: String,
+        applicationKey: String
+    ): List<EventResult> {
+        val request = Request.Builder()
+            .url("${bettingUrl}listEvents/")
+            .addDefaultHeaders(sessionToken, applicationKey)
+            .post(
+                objectMapper.writeValueAsString(
+                    mapOf(
+                        Pair("filter", filter),
+                        Pair("locale", locale),
+                        Pair("maxResults", maxResults.toString())
+                    )
+                ).toRequestBody()
+            )
+            .build()
+
+        val response = client.newCall(request).execute()
+        val responseBody = response.body?.string()
+
+        val body = when {
+            response.isSuccessful -> responseBody ?: throw APINGException("Response body is null")
+            else -> throw APINGException("Response code: ${response.code}, reason: $responseBody")
+        }
+
+        return objectMapper.readValue(body)
+    }
+}
+
+private fun Request.Builder.addDefaultHeaders(sessionToken: String, applicationKey: String): Request.Builder {
+    this.addHeader("X-Authentication", sessionToken)
+    this.addHeader("X-Application", applicationKey)
+    this.addHeader("Content-Type", "application/json")
+    this.addHeader("Accept", "application/json")
+    return this
 }
