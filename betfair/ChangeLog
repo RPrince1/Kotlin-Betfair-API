@@ -10,13 +10,8 @@ BB-9 Implement Betting operations
 X - BB-10 Convert to Library
 
 // List of tickets to do
+Review entities and nullability
 Make tests more specific, requests headers/parameters aren't validated in tests
-Decide if the Object Mapper is a parameter you want to give to the Consumer
 Add Heartbeat API
-Implement token refresh
 Add linter
-Use the developer app key function for getAccountFunds (also make it env specific)
 Update performance https://docs.developer.betfair.com/display/1smk3cen4v3lu3yomq5qye0ni/Optimizing+API+Application+Performance
-
-// Questions
-Do I need the exchange stream api in order to get market data more frequently? What is a sufficient frequency?

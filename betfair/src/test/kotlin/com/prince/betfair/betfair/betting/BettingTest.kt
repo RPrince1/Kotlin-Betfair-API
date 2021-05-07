@@ -1,7 +1,15 @@
 package com.prince.betfair.betfair.betting
 
 import com.prince.betfair.betfair.betting.entities.*
-import com.prince.betfair.betfair.betting.enums.TimeGranularity
+import com.prince.betfair.betfair.betting.entities.competition.Competition
+import com.prince.betfair.betfair.betting.entities.competition.CompetitionResult
+import com.prince.betfair.betfair.betting.entities.competition.CountryCodeResult
+import com.prince.betfair.betfair.betting.entities.event.Event
+import com.prince.betfair.betfair.betting.entities.event.EventResult
+import com.prince.betfair.betfair.betting.entities.event.EventType
+import com.prince.betfair.betfair.betting.entities.event.EventTypeResult
+import com.prince.betfair.betfair.betting.entities.market.*
+import com.prince.betfair.betfair.betting.enums.*
 import com.prince.betfair.betfair.betting.exception.APINGException
 import com.prince.betfair.config.JacksonConfiguration
 import io.kotest.assertions.throwables.shouldThrow
@@ -42,11 +50,13 @@ class BettingTest : StringSpec({
         val marketFilter = MarketFilter()
         val locale = null
         val maxResults = 10
-        val expectedRequest = expectedRequest(method, sessionToken, appKey, mapOf(
-            Pair("filter", marketFilter),
-            Pair("locale", locale),
-            Pair("maxResults", maxResults.toString())
-        ))
+        val expectedRequest = expectedRequest(
+            method, sessionToken, appKey, mapOf(
+                Pair("filter", marketFilter),
+                Pair("locale", locale),
+                Pair("maxResults", maxResults.toString())
+            )
+        )
 
         val jsonResult = """
             [{"eventType":{"id":"1","name":"Horse Racing"},"marketCount":20701}]
@@ -108,11 +118,13 @@ class BettingTest : StringSpec({
         val marketFilter = MarketFilter()
         val locale = null
         val maxResults = 10
-        val expectedRequest = expectedRequest(method, sessionToken, appKey, mapOf(
-            Pair("filter", marketFilter),
-            Pair("locale", locale),
-            Pair("maxResults", maxResults.toString())
-        ))
+        val expectedRequest = expectedRequest(
+            method, sessionToken, appKey, mapOf(
+                Pair("filter", marketFilter),
+                Pair("locale", locale),
+                Pair("maxResults", maxResults.toString())
+            )
+        )
 
         val jsonResult = """
             [{"competition":{"id":"1","name":"Bread winners cup"},"marketCount":19,"competitionRegion":"BRA"}]
@@ -176,11 +188,13 @@ class BettingTest : StringSpec({
         val marketFilter = MarketFilter()
         val granularity = TimeGranularity.DAYS
         val maxResults = 1
-        val expectedRequest = expectedRequest(method, sessionToken, appKey, mapOf(
-            Pair("filter", marketFilter),
-            Pair("granularity", granularity),
-            Pair("maxResults", maxResults.toString())
-        ))
+        val expectedRequest = expectedRequest(
+            method, sessionToken, appKey, mapOf(
+                Pair("filter", marketFilter),
+                Pair("granularity", granularity),
+                Pair("maxResults", maxResults.toString())
+            )
+        )
 
         val jsonResult = """
             [{"timeRange":{"from":"${from.toInstant()}","to":"${to.toInstant()}"},"marketCount":2}]
@@ -249,11 +263,13 @@ class BettingTest : StringSpec({
         val marketFilter = MarketFilter()
         val locale = null
         val maxResults = 1
-        val expectedRequest = expectedRequest(method, sessionToken, appKey, mapOf(
-            Pair("filter", marketFilter),
-            Pair("locale", locale),
-            Pair("maxResults", maxResults.toString())
-        ))
+        val expectedRequest = expectedRequest(
+            method, sessionToken, appKey, mapOf(
+                Pair("filter", marketFilter),
+                Pair("locale", locale),
+                Pair("maxResults", maxResults.toString())
+            )
+        )
 
         val jsonResult = """
             [{"event":{"id":"$id","name":"$name","countryCode":"$countryCode","timezone":"$timezone","venue":"$venue",
@@ -302,6 +318,369 @@ class BettingTest : StringSpec({
 
         val exception = shouldThrow<APINGException> {
             betting.listEvents(marketFilter, null, 1, sessionToken, appKey)
+        }
+
+        exception.message shouldBe "Response body is null"
+    }
+
+    //listMarketTypes
+    "Given a 200 response, when listMarketTypes is called then List<MarketTypeResult> is returned" {
+        val marketType = "NONSPORT"
+        val marketCount = 85
+        val expectedMarketTypeResult = MarketTypeResult(marketType, marketCount)
+
+        val method = "listMarketTypes"
+        val marketFilter = MarketFilter()
+        val locale = null
+        val maxResults = 1
+        val expectedRequest = expectedRequest(
+            method, sessionToken, appKey, mapOf(
+                Pair("filter", marketFilter),
+                Pair("locale", locale),
+                Pair("maxResults", maxResults.toString())
+            )
+        )
+
+        val jsonResult = """
+            [{"marketType":"$marketType","marketCount":$marketCount}]
+        """.trimIndent()
+
+        val slot = CapturingSlot<Request>()
+
+        every { clientMock.newCall(capture(slot)).execute() } returns response
+        every { response.body } returns jsonResult.toResponseBody()
+        every { response.isSuccessful } returns true
+
+        val betting = Betting(clientMock)
+        val result = betting.listMarketTypes(marketFilter, locale, maxResults, sessionToken, appKey)
+
+        slot.captured.body?.contentLength() shouldBe expectedRequest.body?.contentLength()
+        slot.captured.headers shouldBe expectedRequest.headers
+        slot.captured.method shouldBe expectedRequest.method
+        slot.captured.url shouldBe expectedRequest.url
+        result shouldBe listOf(expectedMarketTypeResult)
+    }
+
+    "Given a non-200 response, when listMarketTypes is called then it throws an APINGException" {
+        every { clientMock.newCall(any()).execute() } returns response
+        every { response.body } returns "Error".toResponseBody()
+        every { response.isSuccessful } returns false
+        every { response.code } returns 409
+
+        val marketFilter = MarketFilter()
+        val betting = Betting(clientMock)
+
+        val exception = shouldThrow<APINGException> {
+            betting.listMarketTypes(marketFilter, null, 1, sessionToken, appKey)
+        }
+
+        exception.message shouldBe "Response code: 409, reason: Error"
+    }
+
+    "Given a null response, when listMarketTypes is called then it throws an AccountAPINGException" {
+        every { clientMock.newCall(any()).execute() } returns response
+        every { response.body } returns null
+        every { response.isSuccessful } returns true
+
+        val marketFilter = MarketFilter()
+        val betting = Betting(clientMock)
+
+        val exception = shouldThrow<APINGException> {
+            betting.listEvents(marketFilter, null, 1, sessionToken, appKey)
+        }
+
+        exception.message shouldBe "Response body is null"
+    }
+
+    //listCountries
+    "Given a 200 response, when listCountries is called then List<CountryCodeResult> is returned" {
+        val countryCode = "GB"
+        val marketCount = 3796
+        val expectedCountryCodeResult = CountryCodeResult(countryCode, marketCount)
+
+        val method = "listCountries"
+        val marketFilter = MarketFilter()
+        val locale = null
+        val maxResults = 1
+        val expectedRequest = expectedRequest(
+            method, sessionToken, appKey, mapOf(
+                Pair("filter", marketFilter),
+                Pair("locale", locale),
+                Pair("maxResults", maxResults.toString())
+            )
+        )
+
+        val jsonResult = """
+            [{"countryCode":"$countryCode","marketCount":$marketCount}]
+        """.trimIndent()
+
+        val slot = CapturingSlot<Request>()
+
+        every { clientMock.newCall(capture(slot)).execute() } returns response
+        every { response.body } returns jsonResult.toResponseBody()
+        every { response.isSuccessful } returns true
+
+        val betting = Betting(clientMock)
+        val result = betting.listCountries(marketFilter, locale, maxResults, sessionToken, appKey)
+
+        slot.captured.body?.contentLength() shouldBe expectedRequest.body?.contentLength()
+        slot.captured.headers shouldBe expectedRequest.headers
+        slot.captured.method shouldBe expectedRequest.method
+        slot.captured.url shouldBe expectedRequest.url
+        result shouldBe listOf(expectedCountryCodeResult)
+    }
+
+    "Given a non-200 response, when listCountries is called then it throws an APINGException" {
+        every { clientMock.newCall(any()).execute() } returns response
+        every { response.body } returns "Error".toResponseBody()
+        every { response.isSuccessful } returns false
+        every { response.code } returns 409
+
+        val marketFilter = MarketFilter()
+        val betting = Betting(clientMock)
+
+        val exception = shouldThrow<APINGException> {
+            betting.listCountries(marketFilter, null, 1, sessionToken, appKey)
+        }
+
+        exception.message shouldBe "Response code: 409, reason: Error"
+    }
+
+    "Given a null response, when listCountries is called then it throws an AccountAPINGException" {
+        every { clientMock.newCall(any()).execute() } returns response
+        every { response.body } returns null
+        every { response.isSuccessful } returns true
+
+        val marketFilter = MarketFilter()
+        val betting = Betting(clientMock)
+
+        val exception = shouldThrow<APINGException> {
+            betting.listCountries(marketFilter, null, 1, sessionToken, appKey)
+        }
+
+        exception.message shouldBe "Response body is null"
+    }
+
+    //listVenues
+    "Given a 200 response, when listVenues is called then List<CountryCodeResult> is returned" {
+        val venue = "Vue Cinema"
+        val marketCount = 3796
+        val expectedVenueResult = VenueResult(venue, marketCount)
+
+        val method = "listVenues"
+        val marketFilter = MarketFilter()
+        val locale = null
+        val maxResults = 1
+        val expectedRequest = expectedRequest(
+            method, sessionToken, appKey, mapOf(
+                Pair("filter", marketFilter),
+                Pair("locale", locale),
+                Pair("maxResults", maxResults.toString())
+            )
+        )
+
+        val jsonResult = """
+            [{"venue":"$venue","marketCount":$marketCount}]
+        """.trimIndent()
+
+        val slot = CapturingSlot<Request>()
+
+        every { clientMock.newCall(capture(slot)).execute() } returns response
+        every { response.body } returns jsonResult.toResponseBody()
+        every { response.isSuccessful } returns true
+
+        val betting = Betting(clientMock)
+        val result = betting.listVenues(marketFilter, locale, maxResults, sessionToken, appKey)
+
+        slot.captured.body?.contentLength() shouldBe expectedRequest.body?.contentLength()
+        slot.captured.headers shouldBe expectedRequest.headers
+        slot.captured.method shouldBe expectedRequest.method
+        slot.captured.url shouldBe expectedRequest.url
+        result shouldBe listOf(expectedVenueResult)
+    }
+
+    "Given a non-200 response, when listVenues is called then it throws an APINGException" {
+        every { clientMock.newCall(any()).execute() } returns response
+        every { response.body } returns "Error".toResponseBody()
+        every { response.isSuccessful } returns false
+        every { response.code } returns 409
+
+        val marketFilter = MarketFilter()
+        val betting = Betting(clientMock)
+
+        val exception = shouldThrow<APINGException> {
+            betting.listVenues(marketFilter, null, 1, sessionToken, appKey)
+        }
+
+        exception.message shouldBe "Response code: 409, reason: Error"
+    }
+
+    "Given a null response, when listVenues is called then it throws an AccountAPINGException" {
+        every { clientMock.newCall(any()).execute() } returns response
+        every { response.body } returns null
+        every { response.isSuccessful } returns true
+
+        val marketFilter = MarketFilter()
+        val betting = Betting(clientMock)
+
+        val exception = shouldThrow<APINGException> {
+            betting.listVenues(marketFilter, null, 1, sessionToken, appKey)
+        }
+
+        exception.message shouldBe "Response body is null"
+    }
+
+    //listMarketCatalogue
+    //TODO reduce size of this test
+    "Given a 200 response, when listMarketCatalogue is called then List<MarketCatalogue> is returned" {
+        val marketId = "1245678"
+        val marketName = "Exit dates"
+        val marketStartTime = Date.from(Instant.now())
+        val persistenceEnabled = true
+        val bspMarket = true
+        val marketTime = Date.from(Instant.now())
+        val suspendTime = Date.from(Instant.now())
+        val settleTime = Date.from(Instant.now())
+        val bettingType = MarketBettingType.ODDS
+        val turnInPlayEnabled = true
+        val marketType = "marketType"
+        val regulator = "Warren G"
+        val marketBaseRate = 5.0
+        val discountAllowed = true
+        val wallet = "skint"
+        val rules = "1st rule of fight club"
+        val rulesHasDate = true
+        val eachWayDivisor = 2.0
+        val clarifications = "none"
+        val maxUnitValue = 2.0
+        val minUnitValue = 1.0
+        val interval = 0.5
+        val marketUnit = "marketUnit"
+        val lineRangeInfo = MarketLineRangeInfo(maxUnitValue, minUnitValue, interval, marketUnit)
+        val raceType = "Backwards"
+        val priceLadderType = PriceLadderType.CLASSIC
+        val priceLadderDescription = PriceLadderDescription(priceLadderType)
+        val description = MarketDescription(
+            persistenceEnabled, bspMarket, marketTime, suspendTime, settleTime, bettingType,
+            turnInPlayEnabled, marketType, regulator, marketBaseRate, discountAllowed, wallet, rules, rulesHasDate,
+            eachWayDivisor, clarifications, lineRangeInfo, raceType, priceLadderDescription
+        )
+        val totalMatched = 2.0
+        val selectionId = 1L
+        val runnerName = "Mo"
+        val handicap = 2.0
+        val sortPriority = 1
+        val metaData1 = "meta"
+        val metaData2 = "data"
+        val metadata = mapOf(Pair(metaData1, metaData2))
+        val runnerCatalog = RunnerCatalog(selectionId, runnerName, handicap, sortPriority, metadata)
+        val runners = listOf(runnerCatalog)
+        val eventId = "1234567"
+        val eventName = "Disco"
+        val eventType = EventType(eventId, eventName)
+        val competitionId = "876543"
+        val competitionName = "Dancing Cup"
+        val competition = Competition(competitionId, competitionName)
+        val countryCode = "GB"
+        val timezone = "GMT"
+        val venue = "Bowlarama Venue"
+        val openDate = Date.from(Instant.now())
+        val event = Event(eventId, eventName, countryCode, timezone, venue, openDate)
+        val expectedMarketCatalogue = MarketCatalogue(
+            marketId,
+            marketName,
+            marketStartTime,
+            description,
+            totalMatched,
+            runners,
+            eventType,
+            competition,
+            event
+        )
+
+        val method = "listMarketCatalogue"
+        val marketFilter = MarketFilter()
+        val marketProjection = setOf(MarketProjection.MARKET_DESCRIPTION)
+        val sort = MarketSort.FIRST_TO_START
+        val locale = null
+        val maxResults = 1
+        val expectedRequest = expectedRequest(
+            method, sessionToken, appKey, mapOf(
+                Pair("filter", marketFilter),
+                Pair("marketProjection", marketProjection),
+                Pair("sort", sort),
+                Pair("locale", locale),
+                Pair("maxResults", maxResults.toString())
+            )
+        )
+
+        val jsonResult = """
+            [{"marketId":"$marketId","marketName":"$marketName","marketStartTime":"${marketStartTime.toInstant()}",
+            "description":{"persistenceEnabled":$persistenceEnabled,"bspMarket":$bspMarket,"marketTime":"${marketTime.toInstant()}",
+            "suspendTime":"${suspendTime.toInstant()}","settleTime":"${settleTime.toInstant()}","bettingType":"$bettingType",
+            "turnInPlayEnabled":$turnInPlayEnabled,
+            "marketType":"$marketType","regulator":"$regulator","marketBaseRate":$marketBaseRate,"discountAllowed":$discountAllowed,
+            "wallet":"$wallet","rules":"$rules","rulesHasDate":$rulesHasDate,"eachWayDivisor":$eachWayDivisor,
+            "clarifications":"$clarifications","lineRangeInfo":{"maxUnitValue":$maxUnitValue,"minUnitValue":$minUnitValue,
+            "interval":$interval,"marketUnit":"$marketUnit"},"raceType":"$raceType",
+            "priceLadderDescription":{"priceLadderType":"$priceLadderType"}},"totalMatched":$totalMatched,
+            "runners":[{"selectionId":$selectionId,"runnerName":"$runnerName","handicap":$handicap,"sortPriority":$sortPriority,
+            "metadata":{"$metaData1":"$metaData2"}}],"eventType":{"id":"$eventId","name":"$eventName"},
+            "competition":{"id":"$competitionId","name":"$competitionName"},"event":{"id":"$eventId","name":"$eventName",
+            "countryCode":"$countryCode","timezone":"$timezone","venue":"$venue","openDate":"${openDate.toInstant()}"}}]
+        """.trimIndent()
+
+        val slot = CapturingSlot<Request>()
+
+        every { clientMock.newCall(capture(slot)).execute() } returns response
+        every { response.body } returns jsonResult.toResponseBody()
+        every { response.isSuccessful } returns true
+
+        val betting = Betting(clientMock)
+        val result =
+            betting.listMarketCatalogue(marketFilter, marketProjection, sort, locale, maxResults, sessionToken, appKey)
+
+        slot.captured.body?.contentLength() shouldBe expectedRequest.body?.contentLength()
+        slot.captured.headers shouldBe expectedRequest.headers
+        slot.captured.method shouldBe expectedRequest.method
+        slot.captured.url shouldBe expectedRequest.url
+        result shouldBe listOf(expectedMarketCatalogue)
+    }
+
+    "Given a non-200 response, when listMarketCatalogue is called then it throws an APINGException" {
+        every { clientMock.newCall(any()).execute() } returns response
+        every { response.body } returns "Error".toResponseBody()
+        every { response.isSuccessful } returns false
+        every { response.code } returns 409
+
+        val marketFilter = MarketFilter()
+        val marketProjection = setOf(MarketProjection.MARKET_DESCRIPTION)
+        val sort = MarketSort.FIRST_TO_START
+        val locale = null
+        val maxResults = 1
+        val betting = Betting(clientMock)
+
+        val exception = shouldThrow<APINGException> {
+            betting.listMarketCatalogue(marketFilter, marketProjection, sort, locale, maxResults, sessionToken, appKey)
+        }
+
+        exception.message shouldBe "Response code: 409, reason: Error"
+    }
+
+    "Given a null response, when listMarketCatalogue is called then it throws an AccountAPINGException" {
+        every { clientMock.newCall(any()).execute() } returns response
+        every { response.body } returns null
+        every { response.isSuccessful } returns true
+
+        val marketFilter = MarketFilter()
+        val marketProjection = setOf(MarketProjection.MARKET_DESCRIPTION)
+        val sort = MarketSort.FIRST_TO_START
+        val locale = null
+        val maxResults = 1
+        val betting = Betting(clientMock)
+
+        val exception = shouldThrow<APINGException> {
+            betting.listMarketCatalogue(marketFilter, marketProjection, sort, locale, maxResults, sessionToken, appKey)
         }
 
         exception.message shouldBe "Response body is null"

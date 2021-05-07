@@ -1,6 +1,7 @@
-package com.prince.betfair.betfair.betting.entities
+package com.prince.betfair.betfair.betting.entities.market
 
 import com.fasterxml.jackson.annotation.JsonInclude
+import com.prince.betfair.betfair.betting.entities.TimeRange
 import com.prince.betfair.betfair.betting.enums.MarketBettingType
 import com.prince.betfair.betfair.betting.enums.OrderStatus
 
