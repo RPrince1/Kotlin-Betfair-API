@@ -2,8 +2,8 @@ package com.prince.betfair.betfair.betting.entities.market
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.prince.betfair.betfair.betting.entities.TimeRange
-import com.prince.betfair.betfair.betting.enums.MarketBettingType
-import com.prince.betfair.betfair.betting.enums.OrderStatus
+import com.prince.betfair.betfair.betting.enums.market.MarketBettingType
+import com.prince.betfair.betfair.betting.enums.market.OrderStatus
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class MarketFilter(

@@ -6,14 +6,9 @@ import com.prince.betfair.client.SSOID.Success
 import com.prince.betfair.client.exception.ClientException
 import com.prince.betfair.client.exception.ServerException
 import com.prince.betfair.config.JacksonConfiguration
-import okhttp3.FormBody
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
+import okhttp3.*
 
-class ClientSSO(
-    private val client: OkHttpClient
-) {
+class ClientSSO(private val client: OkHttpClient) {
 
     private val objectMapper: ObjectMapper = JacksonConfiguration().mapper()
 
@@ -33,13 +28,22 @@ class ClientSSO(
             .build()
 
         val response = client.newCall(request).execute()
-        val body = getBody(response)
-        val loginResponse = objectMapper.readValue(body, LoginResponse::class.java)
+        val bodyResult = kotlin.runCatching {
+            getBody(response)
+        }
+        return when (val body = bodyResult.getOrNull()) {
+            null -> Failure(bodyResult.exceptionOrNull()!!.javaClass.name, bodyResult.exceptionOrNull()?.message)
+            else -> handleLoginResponse(body)
+        }
+    }
+
+    private fun handleLoginResponse(b: String): SSOID {
+        val loginResponse = objectMapper.readValue(b, LoginResponse::class.java)
 
         return if (loginResponse.loginStatus == "SUCCESS" && !loginResponse.sessionToken.isNullOrEmpty()) {
             Success(loginResponse.sessionToken)
         } else {
-            Failure(loginResponse.loginStatus)
+            Failure(loginResponse.loginStatus, null)
         }
     }
 

@@ -1,12 +1,8 @@
 package com.prince.betfair.client
 
-import com.prince.betfair.client.exception.ClientException
-import com.prince.betfair.client.exception.ServerException
-import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.types.shouldBeSameInstanceAs
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.junit5.MockKExtension
@@ -44,9 +40,8 @@ class HttpClientSSOTest: StringSpec({
     }
 
     "Given a successful response, when the loginStatus is not SUCCESS then returns SSOID.Failure" {
-        val sessionToken = "sessionToken"
         val loginStatus = "FAILED"
-        val expectedSSOID = SSOID.Failure(loginStatus)
+        val expectedSSOID = SSOID.Failure(loginStatus, null)
         val jsonResult = """{"loginStatus":"$loginStatus"}"""
 
         every { client.newCall(any()).execute() } returns response
@@ -61,28 +56,33 @@ class HttpClientSSOTest: StringSpec({
     "Given an unsuccessful response, when login is called then throws a ClientException" {
         val body = "error"
         val responseCode = 400
+        val expectedSSOID = SSOID.Failure(
+            "com.prince.betfair.client.exception.ClientException",
+            "Response code: $responseCode, reason: $body"
+        )
 
         every { client.newCall(any()).execute() } returns response
         every { response.isSuccessful } returns false
         every { response.body.toString() } returns body
         every { response.code } returns responseCode
 
-        val exception = shouldThrow<ClientException> {
-            httpClientSSO.login("email", "password")
-        }
+        val result = httpClientSSO.login("email", "password")
 
-        exception.message shouldBe "Response code: $responseCode, reason: $body"
+        result shouldBe expectedSSOID
     }
 
     "Given successful response with an empty body, when login is called then throws a ServerException" {
+        val expectedSSOID = SSOID.Failure(
+            "com.prince.betfair.client.exception.ServerException",
+            "Response body is null"
+        )
+
         every { client.newCall(any()).execute() } returns response
         every { response.isSuccessful } returns true
         every { response.body } returns null
 
-        val exception = shouldThrow<ServerException> {
-            httpClientSSO.login("email", "password")
-        }
+        val result = httpClientSSO.login("email", "password")
 
-        exception.message shouldBe "Response body is null"
+        result shouldBe expectedSSOID
     }
 })

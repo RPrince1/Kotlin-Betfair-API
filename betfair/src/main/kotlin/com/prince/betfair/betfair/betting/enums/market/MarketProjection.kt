@@ -1,4 +1,4 @@
-package com.prince.betfair.betfair.betting.enums
+package com.prince.betfair.betfair.betting.enums.market
 
 enum class MarketProjection {
     COMPETITION,

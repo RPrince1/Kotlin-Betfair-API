@@ -10,8 +10,15 @@ import com.prince.betfair.betfair.betting.entities.event.EventType
 import com.prince.betfair.betfair.betting.entities.event.EventTypeResult
 import com.prince.betfair.betfair.betting.entities.market.*
 import com.prince.betfair.betfair.betting.enums.*
+import com.prince.betfair.betfair.betting.enums.market.MarketBettingType
+import com.prince.betfair.betfair.betting.enums.market.MarketProjection
+import com.prince.betfair.betfair.betting.enums.market.MarketSort
+import com.prince.betfair.betfair.betting.enums.market.PriceLadderType
 import com.prince.betfair.betfair.betting.exception.APINGException
 import com.prince.betfair.config.JacksonConfiguration
+import com.prince.betfair.createMatchProjection
+import com.prince.betfair.createOrderProjection
+import com.prince.betfair.createPriceProjection
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.core.spec.style.StringSpec
@@ -684,6 +691,71 @@ class BettingTest : StringSpec({
         }
 
         exception.message shouldBe "Response body is null"
+    }
+
+    //listMarketBook
+    "Given a 200 response, when listMarketBook is called then List<MarketBook> is returned" {
+        val expectedMarketBook = createMarketBook()
+
+        val marketIds = listOf("1.163016936")
+        val priceProjection = createPriceProjection()
+        val orderProjection = createOrderProjection()
+        val matchProjection = createMatchProjection()
+        val includeOverallPosition = true
+        val partitionMatchedByStrategyRef = true
+        val customerStrategy = setOf("STRAT")
+        val currencyCode = "GBP"
+        val locale = null
+        val matchedSince = Date.from(Instant.now())
+        val betIds = setOf("1.163016936")
+
+        val method = "listMarketBook"
+        val expectedRequest = expectedRequest(
+            method, sessionToken, appKey, mapOf(
+                Pair("marketIds", marketIds),
+                Pair("priceProjection", priceProjection),
+                Pair("orderProjection", orderProjection),
+                Pair("matchProjection", matchProjection),
+                Pair("includeOverallPosition", includeOverallPosition),
+                Pair("partitionMatchedByStrategyRef", partitionMatchedByStrategyRef),
+                Pair("customerStrategyRefs", customerStrategy),
+                Pair("currencyCode", currencyCode),
+                Pair("locale", locale),
+                Pair("matchedSince", matchedSince),
+                Pair("betIds", betIds)
+            )
+        )
+
+        val jsonResult = createMarketBookJson()
+
+        val slot = CapturingSlot<Request>()
+
+        every { clientMock.newCall(capture(slot)).execute() } returns response
+        every { response.body } returns jsonResult.toResponseBody()
+        every { response.isSuccessful } returns true
+
+        val betting = Betting(clientMock)
+        val result = betting.listMarketBook(
+                marketIds,
+                priceProjection,
+                orderProjection,
+                matchProjection,
+                includeOverallPosition,
+                partitionMatchedByStrategyRef,
+                customerStrategy,
+                currencyCode,
+                locale,
+                matchedSince,
+                betIds,
+                sessionToken,
+                appKey
+            )
+
+        slot.captured.body?.contentLength() shouldBe expectedRequest.body?.contentLength()
+        slot.captured.headers shouldBe expectedRequest.headers
+        slot.captured.method shouldBe expectedRequest.method
+        slot.captured.url shouldBe expectedRequest.url
+        result shouldBe listOf(expectedMarketBook)
     }
 })
 

@@ -1,6 +1,6 @@
 package com.prince.betfair.betfair.betting.entities.market
 
-import com.prince.betfair.betfair.betting.enums.MarketBettingType
+import com.prince.betfair.betfair.betting.enums.market.MarketBettingType
 import java.util.*
 
 data class MarketDescription(
