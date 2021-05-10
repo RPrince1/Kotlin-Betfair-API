@@ -1,0 +1,48 @@
+[
+  {
+    "marketId": "1.163016936",
+    "commissionApplied": 5.0,
+    "profitAndLosses": [
+      {
+        "selectionId": 1408,
+        "ifWin": 0.0
+      },
+      {
+        "selectionId": 15298,
+        "ifWin": 0.0
+      },
+      {
+        "selectionId": 15299,
+        "ifWin": 0.0
+      },
+      {
+        "selectionId": 15300,
+        "ifWin": 0.0
+      },
+      {
+        "selectionId": 15301,
+        "ifWin": 0.0
+      },
+      {
+        "selectionId": 15302,
+        "ifWin": 0.0
+      },
+      {
+        "selectionId": 15303,
+        "ifWin": 0.0
+      },
+      {
+        "selectionId": 61303,
+        "ifWin": 0.0
+      },
+      {
+        "selectionId": 55211,
+        "ifWin": 0.0
+      },
+      {
+        "selectionId": 55212,
+        "ifWin": 0.0
+      }
+    ]
+  }
+]

@@ -16,8 +16,8 @@ import com.prince.betfair.betfair.betting.enums.market.PriceData
  *  to EX_BEST_OFFERS and EX_ALL_OFFERS price projections. Not supported as yet.
  */
 data class PriceProjection(
-    val priceData: Set<PriceData>,
-    val exBestOffersOverrides: ExBestOffersOverrides,
-    val virtualise: Boolean,
-    val rolloverStakes: Boolean
+    val priceData: Set<PriceData>?,
+    val exBestOffersOverrides: ExBestOffersOverrides?,
+    val virtualise: Boolean?,
+    val rolloverStakes: Boolean?
 )

@@ -25,19 +25,13 @@ object Versions {
 }
 
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter")
-	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-
 	implementation("org.apache.httpcomponents:httpclient:4.5.13")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${Versions.jacksonKotlin}")
 	implementation("io.github.microutils:kotlin-logging-jvm:${Versions.kotlinLogging}")
 	implementation("com.squareup.okhttp3:okhttp:${Versions.okhttp}")
 
-	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.kotest:kotest-runner-junit5:${Versions.kotest}")
 	testImplementation("io.kotest:kotest-assertions-core:${Versions.kotest}")
 	testImplementation("io.mockk:mockk:${Versions.mockk}")

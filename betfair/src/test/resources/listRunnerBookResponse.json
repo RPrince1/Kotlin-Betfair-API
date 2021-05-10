@@ -1,0 +1,29 @@
+[
+  {
+    "marketId": "1.163016936",
+    "isMarketDataDelayed": true,
+    "status": "OPEN",
+    "betDelay": 0,
+    "bspReconciled": false,
+    "complete": true,
+    "inplay": false,
+    "numberOfWinners": 1,
+    "numberOfRunners": 10,
+    "numberOfActiveRunners": 10,
+    "lastMatchTime": "2021-05-01T12:45:40.038Z",
+    "totalMatched": 778.03,
+    "totalAvailable": 6354.01,
+    "crossMatching": true,
+    "runnersVoidable": false,
+    "version": 3802804447,
+    "runners": [
+      {
+        "selectionId": 55212,
+        "handicap": 0.0,
+        "status": "ACTIVE",
+        "lastPriceTraded": 2.7,
+        "totalMatched": 0.0
+      }
+    ]
+  }
+]

@@ -10,8 +10,9 @@ BB-9 Implement Betting operations
 X - BB-10 Convert to Library
 
 // List of tickets to do
+Update accounts test
+Update test request responses to include all fields
 Review entities and nullability
-Make tests more specific, requests headers/parameters aren't validated in tests
 Add Heartbeat API
 Add linter
 Update performance https://docs.developer.betfair.com/display/1smk3cen4v3lu3yomq5qye0ni/Optimizing+API+Application+Performance

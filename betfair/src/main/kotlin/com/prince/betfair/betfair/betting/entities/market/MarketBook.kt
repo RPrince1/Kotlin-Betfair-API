@@ -1,7 +1,5 @@
-package com.prince.betfair.betfair.betting
+package com.prince.betfair.betfair.betting.entities.market
 
-import com.prince.betfair.betfair.betting.entities.market.KeyLineDescription
-import com.prince.betfair.betfair.betting.entities.market.Runner
 import com.prince.betfair.betfair.betting.enums.market.MarketStatus
 import java.util.*
 
