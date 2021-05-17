@@ -1,5 +1,6 @@
 package com.prince.betfair
 
+import com.prince.betfair.betfair.betting.entities.TimeRange
 import com.prince.betfair.betfair.betting.entities.competition.Competition
 import com.prince.betfair.betfair.betting.entities.event.Event
 import com.prince.betfair.betfair.betting.entities.event.EventType
@@ -110,3 +111,17 @@ fun createExBestOffersOverrides(
 fun createRollUpModel() = RollUpModel.MANAGED_LIABILITY
 
 fun createPriceData() = PriceData.EX_ALL_OFFERS
+
+fun createRunnerId(
+    marketId: String = "marketId",
+    selectionId: Long = 12346,
+    handicap: Double = 2.0
+) = RunnerId(marketId, selectionId, handicap)
+
+fun createTimeRange(
+    from: Date = Date.from(Instant.now().minusMillis(999999999)),
+    to: Date = Date.from(Instant.now())
+) = TimeRange(
+    from,
+    to
+)

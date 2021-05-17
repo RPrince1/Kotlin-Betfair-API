@@ -1,4 +1,4 @@
-package com.prince.betfair.betfair.betting.entities
+package com.prince.betfair.betfair.betting.entities.order
 
 /**
  * A container representing search results.

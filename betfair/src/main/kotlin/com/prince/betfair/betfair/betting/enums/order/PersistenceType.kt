@@ -1,4 +1,4 @@
-package com.prince.betfair.betfair.betting.enums.market
+package com.prince.betfair.betfair.betting.enums.order
 
 /**
  * @property LAPSE: Lapse the order when the market is turned in-play

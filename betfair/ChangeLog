@@ -12,6 +12,9 @@ X - BB-10 Convert to Library
 // List of tickets to do
 Update accounts test
 Update test request responses to include all fields
+Review repetition in tests
+Review classes are in correct packages
+Fix sl4j import
 Review entities and nullability
 Add Heartbeat API
 Add linter

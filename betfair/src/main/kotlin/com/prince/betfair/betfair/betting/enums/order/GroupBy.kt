@@ -1,4 +1,4 @@
-package com.prince.betfair.betfair.betting.enums
+package com.prince.betfair.betfair.betting.enums.order
 
 /**
  * @property EVENT_TYPE: A roll up of settled P&L, commission paid and number of bet orders, on a specified event type
@@ -9,5 +9,9 @@ package com.prince.betfair.betfair.betting.enums
  * @property BET: The P&L, side and regulatory information etc, about each individual bet order.
  */
 enum class GroupBy {
-
+    EVENT_TYPE,
+    EVENT,
+    MARKET,
+    SIDE,
+    BET
 }

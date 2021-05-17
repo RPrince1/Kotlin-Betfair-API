@@ -8,8 +8,13 @@ import com.prince.betfair.betfair.betting.entities.competition.CountryCodeResult
 import com.prince.betfair.betfair.betting.entities.event.EventResult
 import com.prince.betfair.betfair.betting.entities.event.EventTypeResult
 import com.prince.betfair.betfair.betting.entities.market.*
+import com.prince.betfair.betfair.betting.entities.order.*
 import com.prince.betfair.betfair.betting.enums.*
 import com.prince.betfair.betfair.betting.enums.market.*
+import com.prince.betfair.betfair.betting.enums.order.BetStatus
+import com.prince.betfair.betfair.betting.enums.order.GroupBy
+import com.prince.betfair.betfair.betting.enums.order.OrderBy
+import com.prince.betfair.betfair.betting.enums.order.SortDir
 import com.prince.betfair.betfair.betting.exception.APINGException
 import com.prince.betfair.config.JacksonConfiguration
 import okhttp3.OkHttpClient
@@ -538,7 +543,7 @@ class Betting(
         recordCount: Int?,
         sessionToken: String,
         applicationKey: String
-        ): ClearedOrderSummaryReport {
+    ): ClearedOrderSummaryReport {
         val request = createRequest(
             "listClearedOrders",
             sessionToken,
@@ -559,6 +564,63 @@ class Betting(
                 Pair("locale", locale),
                 Pair("fromRecord", fromRecord),
                 Pair("recordCount", recordCount),
+            )
+        )
+
+        val response = client.newCall(request).execute()
+        val body = handleResponse(response)
+
+        return objectMapper.readValue(body)
+    }
+
+    /**
+     * Place new orders into market. Please note that additional bet sizing rules apply to bets placed into the Italian
+     * Exchange.
+     *
+     * In normal circumstances the placeOrders is an atomic operation.  PLEASE NOTE: if the 'Best Execution' features is
+     * switched off, placeOrders can return ‘PROCESSED_WITH_ERRORS’ meaning that some bets can be rejected and other
+     * placed when submitted in the same PlaceInstruction
+     *
+     * @param marketId: (required) The market id these orders are to be placed on
+     * @param instructions: (required) The number of place instructions.  The limit of place instructions per request is
+     * 200 for the Global Exchange and 50 for the Italian Exchange.
+     * @param customerRef: Optional parameter allowing the client to pass a unique string (up to 32 chars) that is used
+     * to de-dupe mistaken re-submissions.   CustomerRef can contain: upper/lower chars, digits, chars : - . _ + * : ; ~
+     * only. Please note: There is a time window associated with the de-duplication of duplicate submissions which is 60
+     * seconds.
+     * @param marketVersion: Optional parameter allowing the client to specify which version of the market the orders
+     * should be placed on. If the current market version is higher than that sent on an order, the bet will be lapsed.
+     * @param customerStrategyRef: An optional reference customers can use to specify which strategy has sent the order.
+     * The reference will be returned on order change messages through the stream API. The string is limited to 15
+     * characters. If an empty string is provided it will be treated as null.
+     * @param async: An optional flag (not setting equates to false) which specifies if the orders should be placed
+     * asynchronously. Orders can be tracked via the Exchange Stream API or or the API-NG by providing a
+     * customerOrderRef for each place order. An order's status will be PENDING and no bet ID will be returned. This
+     * functionality is available for all bet types - including Market on Close and Limit on Close
+     * @throws APINGException
+     */
+    fun placeOrders(
+        marketId: String,
+        instructions: List<PlaceInstruction>,
+        customerRef: String?,
+        marketVersion: MarketVersion?,
+        customerStrategyRef: String?,
+        async: Boolean?,
+        sessionToken: String,
+        applicationKey: String
+    ): PlaceExecutionReport
+    {
+        val request = createRequest(
+            "placeOrders",
+            sessionToken,
+            applicationKey,
+            mapOf(
+                Pair("marketId", marketId),
+                Pair("instructions", instructions),
+                Pair("customerRef", customerRef),
+                Pair("marketVersion", marketVersion),
+                Pair("customerStrategyRef", customerStrategyRef),
+                Pair("async", async)
             )
         )
 

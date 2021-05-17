@@ -1,7 +1,8 @@
-package com.prince.betfair.betfair.betting.entities
+package com.prince.betfair.betfair.betting.entities.order
 
+import com.prince.betfair.betfair.betting.entities.ItemDescription
 import com.prince.betfair.betfair.betting.enums.market.OrderType
-import com.prince.betfair.betfair.betting.enums.market.PersistenceType
+import com.prince.betfair.betfair.betting.enums.order.PersistenceType
 import com.prince.betfair.betfair.betting.enums.market.Side
 import java.util.*
 

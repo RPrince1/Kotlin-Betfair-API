@@ -1,4 +1,4 @@
-package com.prince.betfair.betfair.betting.enums
+package com.prince.betfair.betfair.betting.enums.order
 
 /**
  * SETTLED: A matched bet that was settled normally

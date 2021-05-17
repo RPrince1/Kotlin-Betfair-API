@@ -1,4 +1,4 @@
-package com.prince.betfair.betfair.betting.enums
+package com.prince.betfair.betfair.betting.enums.order
 
 /**
  * @property EARLIEST_TO_LATEST: Order from earliest value to latest e.g. lowest betId is first in the results.

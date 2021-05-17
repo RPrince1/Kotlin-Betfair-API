@@ -1,4 +1,4 @@
-package com.prince.betfair.betfair.betting.enums
+package com.prince.betfair.betfair.betting.enums.order
 
 /**
  * @property BY_BET: @Deprecated Use BY_PLACE_TIME instead. Order by placed time, then bet id.

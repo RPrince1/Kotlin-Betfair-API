@@ -1,0 +1,35 @@
+{
+  "clearedOrders": [
+    {
+      "eventTypeId": "7",
+      "eventId": "30504615",
+      "marketId": "1.183147417",
+      "selectionId": 22023487,
+      "handicap": 0.0,
+      "betId": "232845276850",
+      "placedDate": "2021-05-09T22:48:25.000Z",
+      "persistenceType": "LAPSE",
+      "orderType": "LIMIT",
+      "side": "BACK",
+      "priceRequested": 3.0,
+      "settledDate": "2021-05-10T12:05:55.000Z",
+      "sizeCancelled": 2.0
+    },
+    {
+      "eventTypeId": "7",
+      "eventId": "30504615",
+      "marketId": "1.183147417",
+      "selectionId": 22023487,
+      "handicap": 0.0,
+      "betId": "232845373779",
+      "placedDate": "2021-05-09T22:51:53.000Z",
+      "persistenceType": "LAPSE",
+      "orderType": "LIMIT",
+      "side": "BACK",
+      "priceRequested": 3.0,
+      "settledDate": "2021-05-10T12:05:55.000Z",
+      "sizeCancelled": 2.0
+    }
+  ],
+  "moreAvailable": false
+}
