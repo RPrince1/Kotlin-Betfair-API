@@ -35,4 +35,4 @@ data class PlaceInstruction(
     val limitOnCloseOrder: LimitOnCloseOrder?,
     val marketOnCloseOrder: MarketOnCloseOrder?,
     val customerOrderRef: String?
-    )
+)

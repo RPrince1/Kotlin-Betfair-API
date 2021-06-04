@@ -10,9 +10,13 @@ import com.prince.betfair.betfair.betting.entities.event.EventResult
 import com.prince.betfair.betfair.betting.entities.event.EventType
 import com.prince.betfair.betfair.betting.entities.event.EventTypeResult
 import com.prince.betfair.betfair.betting.entities.market.*
+import com.prince.betfair.betfair.betting.entities.order.LimitOrder
+import com.prince.betfair.betfair.betting.entities.order.PlaceInstruction
+import com.prince.betfair.betfair.betting.entities.order.PlaceInstructionReport
 import com.prince.betfair.betfair.betting.enums.*
 import com.prince.betfair.betfair.betting.enums.market.*
 import com.prince.betfair.betfair.betting.enums.order.*
+import com.prince.betfair.betfair.betting.enums.order.InstructionReportStatus.*
 import com.prince.betfair.betfair.betting.exception.APINGException
 import com.prince.betfair.config.JacksonConfiguration
 import io.kotest.assertions.throwables.shouldThrow
@@ -1271,6 +1275,10 @@ class BettingTest : StringSpec({
             )
         }.message shouldBe "Response body is null"
     }
+
+    //PlaceOrders
+    //TODO Faster laptop required to finish tests, manual tests conducted instead
+
 
 })
 

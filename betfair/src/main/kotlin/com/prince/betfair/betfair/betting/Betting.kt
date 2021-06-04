@@ -630,8 +630,125 @@ class Betting(
         return objectMapper.readValue(body)
     }
 
+    /**
+     * Cancel all bets OR cancel all bets on a market OR fully or partially cancel particular orders on a market. Only
+     * LIMIT orders can be cancelled or partially cancelled once placed.
+     *
+     * @param marketId: If marketId and betId aren't supplied all bets are cancelled. Please note: Concurrent requests
+     * to cancel all bets will be rejected until the initial request to cancel all bets is complete.
+     * @param instructions: All instructions need to be on the same market. If not supplied all unmatched bets on the
+     * market (if market id is passed) are fully cancelled.  The limit of cancel instructions per request is 60
+     * @param customerRef: Optional parameter allowing the client to pass a unique string (up to 32 chars) that is used
+     * to de-dupe mistaken re-submissions.
+     * @throws APINGException
+     */
+    fun cancelOrders(
+        marketId: String?,
+        instructions: List<CancelInstruction>?,
+        customerRef: String?,
+        sessionToken: String,
+        applicationKey: String
+    ): CancelExecutionReport {
+        val request = createRequest(
+            "cancelOrders",
+            sessionToken,
+            applicationKey,
+            mapOf(
+                Pair("marketId", marketId),
+                Pair("instructions", instructions),
+                Pair("customerRef", customerRef),
+            )
+        )
+
+        val response = client.newCall(request).execute()
+        val body = handleResponse(response)
+
+        return objectMapper.readValue(body)
+    }
+
+    /**
+     * This operation is logically a bulk cancel followed by a bulk place. The cancel is completed first then the new
+     * orders are placed. The new orders will be placed atomically in that they will all be placed or none will be
+     * placed. In the case where the new orders cannot be placed the cancellations will not be rolled back. See
+     * ReplaceInstruction.
+     *
+     * @param marketId: (required) The market id these orders are to be placed on
+     * @param instructions: (required) The number of replace instructions.  The limit of replace instructions per
+     * request is 60.
+     * @param customerRef: Optional parameter allowing the client to pass a unique string (up to 32 chars) that is used
+     * to de-dupe mistaken re-submissions.
+     * @param marketVersion: Optional parameter allowing the client to specify which version of the market the orders
+     * should be placed on. If the current market version is higher than that sent on an order, the bet will be lapsed.
+     * @param async: An optional flag (not setting equates to false) which specifies if the orders should be replaced
+     * asynchronously. Orders can be tracked via the Exchange Stream API or the API-NG by providing a customerOrderRef
+     * for each replace order. Not available for MOC or LOC bets.
+     * @throws APINGException
+     */
+    fun replaceOrders(
+        marketId: String,
+        instructions: List<ReplaceInstruction>,
+        customerRef: String?,
+        marketVersion: MarketVersion?,
+        async: Boolean?,
+        sessionToken: String,
+        applicationKey: String
+    ): ReplaceExecutionReport {
+        val request = createRequest(
+            "replaceOrders",
+            sessionToken,
+            applicationKey,
+            mapOf(
+                Pair("marketId", marketId),
+                Pair("instructions", instructions),
+                Pair("customerRef", customerRef),
+                Pair("marketVersion", marketVersion),
+                Pair("async", async)
+            )
+        )
+
+        val response = client.newCall(request).execute()
+        val body = handleResponse(response)
+
+        return objectMapper.readValue(body)
+    }
+
+    /**
+     * Update non-exposure changing fields
+     *
+     * @param marketId: (required) The market id these orders are to be placed on
+     * @param instructions: (required) The number of update instructions.  The limit of update instructions per request
+     * is 60
+     * @param customerRef: Optional parameter allowing the client to pass a unique string (up to 32 chars) that is used
+     * to de-dupe mistaken re-submissions.
+     */
+    fun updateOrders(
+        marketId: String,
+        instructions: List<UpdateInstruction>,
+        customerRef: String?,
+        sessionToken: String,
+        applicationKey: String
+    ): UpdateExecutionReport {
+        val request = createRequest(
+            "updateOrders",
+            sessionToken,
+            applicationKey,
+            mapOf(
+                Pair("marketId", marketId),
+                Pair("instructions", instructions),
+                Pair("customerRef", customerRef),
+            )
+        )
+
+        val response = client.newCall(request).execute()
+        val body = handleResponse(response)
+
+        return objectMapper.readValue(body)
+    }
+
     private fun handleResponse(response: Response): String {
         val responseBody = response.body?.string()
+
+        println(responseBody)
 
         return when {
             response.isSuccessful -> responseBody ?: throw APINGException("Response body is null")
