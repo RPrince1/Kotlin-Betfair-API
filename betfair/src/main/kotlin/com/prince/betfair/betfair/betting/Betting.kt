@@ -30,7 +30,14 @@ class Betting(
     private val objectMapper = JacksonConfiguration().mapper()
     private val bettingUrl = "https://api.betfair.com/exchange/betting/rest/v1.0/"
 
-    //Returns a list of Event Types (i.e. Sports) associated with the markets selected by the MarketFilter.
+    /**
+     * Returns a list of Event Types (i.e. Sports) associated with the markets selected by the MarketFilter.
+     *
+     * @param filter: (required) The filter to select desired markets. All markets that match the criteria in the filter
+     * are selected.
+     * @param locale: The language used for the response. If not specified, the default is returned.
+     * @throws APINGException
+     */
     fun listEventTypes(
         filter: MarketFilter,
         locale: String? = null,
@@ -55,6 +62,15 @@ class Betting(
         return objectMapper.readValue(body)
     }
 
+    /**
+     * Returns a list of Competitions (i.e., World Cup 2013) associated with the markets selected by the MarketFilter.
+     * Currently only Football markets have an associated competition.
+     *
+     * @param filter: (required) The filter to select desired markets. All markets that match the criteria in the filter
+     * are selected.
+     * @param locale: The language used for the response. If not specified, the default is returned.
+     * @throws APINGException
+     */
     fun listCompetitions(
         filter: MarketFilter,
         locale: String? = null,
@@ -79,6 +95,15 @@ class Betting(
         return objectMapper.readValue(body)
     }
 
+    /**
+     * Returns a list of time ranges in the granularity specified in the request (i.e. 3PM to 4PM, Aug 14th to Aug 15th) associated with the markets selected by the MarketFilter.
+     *
+     * @param filter: (required) The filter to select desired markets. All markets that match the criteria in the filter
+     * are selected.
+     * @param granularity: (required) The granularity of time periods that correspond to markets selected by the market
+     * filter.
+     * @throws APINGException
+     */
     fun listTimeRanges(
         filter: MarketFilter,
         granularity: TimeGranularity,
@@ -103,6 +128,14 @@ class Betting(
         return objectMapper.readValue(body)
     }
 
+    /**
+     * Returns a list of Events (i.e, Reading vs. Man United) associated with the markets selected by the MarketFilter.
+     *
+     * @param filter: (required) The filter to select desired markets. All markets that match the criteria in the filter
+     * are selected.
+     * @param locale: The language used for the response. If not specified, the default is returned.
+     * @throws APINGException
+     */
     fun listEvents(
         filter: MarketFilter,
         locale: String? = null,
@@ -127,6 +160,16 @@ class Betting(
         return objectMapper.readValue(body)
     }
 
+    //TODO Update docs from here (return types)
+    /**
+     * Returns a list of market types (i.e. MATCH_ODDS, NEXT_GOAL) associated with the markets selected by the
+     * MarketFilter. The market types are always the same, regardless of locale.
+     *
+     * @param filter: (required) The filter to select desired markets. All markets that match the criteria in the filter
+     * are selected.
+     * @param locale: The language used for the response. If not specified, the default is returned.
+     * @throws APINGException
+     */
     fun listMarketTypes(
         filter: MarketFilter,
         locale: String? = null,
@@ -151,6 +194,14 @@ class Betting(
         return objectMapper.readValue(body)
     }
 
+    /**
+     * Returns a list of Countries associated with the markets selected by the MarketFilter.
+     *
+     * @param filter: (required) The filter to select desired markets. All markets that match the criteria in the filter
+     * are selected.
+     * @param locale: The language used for the response. If not specified, the default is returned.
+     * @throws APINGException
+     */
     fun listCountries(
         filter: MarketFilter,
         locale: String? = null,
