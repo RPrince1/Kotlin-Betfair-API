@@ -10,9 +10,6 @@ import com.prince.betfair.betfair.betting.entities.event.EventResult
 import com.prince.betfair.betfair.betting.entities.event.EventType
 import com.prince.betfair.betfair.betting.entities.event.EventTypeResult
 import com.prince.betfair.betfair.betting.entities.market.*
-import com.prince.betfair.betfair.betting.entities.order.LimitOrder
-import com.prince.betfair.betfair.betting.entities.order.PlaceInstruction
-import com.prince.betfair.betfair.betting.entities.order.PlaceInstructionReport
 import com.prince.betfair.betfair.betting.enums.*
 import com.prince.betfair.betfair.betting.enums.market.*
 import com.prince.betfair.betfair.betting.enums.order.*
@@ -57,12 +54,10 @@ class BettingTest : StringSpec({
         val method = "listEventTypes"
         val marketFilter = MarketFilter()
         val locale = null
-        val maxResults = 10
         val expectedRequest = expectedRequest(
             method, sessionToken, appKey, mapOf(
                 Pair("filter", marketFilter),
-                Pair("locale", locale),
-                Pair("maxResults", maxResults.toString())
+                Pair("locale", locale)
             )
         )
 
@@ -77,7 +72,7 @@ class BettingTest : StringSpec({
         every { response.isSuccessful } returns true
 
         val betting = Betting(clientMock)
-        val result = betting.listEventTypes(marketFilter, locale, maxResults, sessionToken, appKey)
+        val result = betting.listEventTypes(marketFilter, locale, sessionToken, appKey)
 
         slot.captured.body?.contentLength() shouldBe expectedRequest.body?.contentLength()
         slot.captured.headers shouldBe expectedRequest.headers
@@ -96,7 +91,6 @@ class BettingTest : StringSpec({
             Betting(clientMock).listEventTypes(
                 filter = MarketFilter(),
                 locale = "locale",
-                maxResults = 10,
                 sessionToken = sessionToken,
                 applicationKey = appKey
             )
@@ -112,7 +106,6 @@ class BettingTest : StringSpec({
             Betting(clientMock).listEventTypes(
                 filter = MarketFilter(),
                 locale = "locale",
-                maxResults = 10,
                 sessionToken = sessionToken,
                 applicationKey = appKey
             )
@@ -127,12 +120,10 @@ class BettingTest : StringSpec({
         val method = "listCompetitions"
         val marketFilter = MarketFilter()
         val locale = "locale"
-        val maxResults = 10
         val expectedRequest = expectedRequest(
             method, sessionToken, appKey, mapOf(
                 Pair("filter", marketFilter),
                 Pair("locale", locale),
-                Pair("maxResults", maxResults.toString())
             )
         )
 
@@ -147,7 +138,7 @@ class BettingTest : StringSpec({
         every { response.isSuccessful } returns true
 
         val betting = Betting(clientMock)
-        val result = betting.listCompetitions(marketFilter, locale, maxResults, sessionToken, appKey)
+        val result = betting.listCompetitions(marketFilter, locale, sessionToken, appKey)
 
         slot.captured.body?.contentLength() shouldBe expectedRequest.body?.contentLength()
         slot.captured.headers shouldBe expectedRequest.headers
@@ -166,7 +157,6 @@ class BettingTest : StringSpec({
             Betting(clientMock).listCompetitions(
                 filter = MarketFilter(),
                 locale = "locale",
-                maxResults = 10,
                 sessionToken = sessionToken,
                 applicationKey = appKey
             )
@@ -182,7 +172,6 @@ class BettingTest : StringSpec({
             Betting(clientMock).listCompetitions(
                 filter = MarketFilter(),
                 locale = "locale",
-                maxResults = 10,
                 sessionToken = sessionToken,
                 applicationKey = appKey
             )
@@ -199,12 +188,10 @@ class BettingTest : StringSpec({
         val method = "listTimeRanges"
         val marketFilter = MarketFilter()
         val granularity = TimeGranularity.DAYS
-        val maxResults = 1
         val expectedRequest = expectedRequest(
             method, sessionToken, appKey, mapOf(
                 Pair("filter", marketFilter),
-                Pair("granularity", granularity),
-                Pair("maxResults", maxResults.toString())
+                Pair("granularity", granularity)
             )
         )
 
@@ -219,7 +206,7 @@ class BettingTest : StringSpec({
         every { response.isSuccessful } returns true
 
         val betting = Betting(clientMock)
-        val result = betting.listTimeRanges(marketFilter, granularity, maxResults, sessionToken, appKey)
+        val result = betting.listTimeRanges(marketFilter, granularity, sessionToken, appKey)
 
         slot.captured.body?.contentLength() shouldBe expectedRequest.body?.contentLength()
         slot.captured.headers shouldBe expectedRequest.headers
@@ -239,7 +226,6 @@ class BettingTest : StringSpec({
                 .listTimeRanges(
                     filter = MarketFilter(),
                     granularity = TimeGranularity.DAYS,
-                    maxResults = 10,
                     sessionToken = sessionToken,
                     applicationKey = appKey
                 )
@@ -256,7 +242,6 @@ class BettingTest : StringSpec({
                 .listTimeRanges(
                     filter = MarketFilter(),
                     granularity = TimeGranularity.DAYS,
-                    maxResults = 10,
                     sessionToken = sessionToken,
                     applicationKey = appKey
                 )
@@ -278,12 +263,10 @@ class BettingTest : StringSpec({
         val method = "listEvents"
         val marketFilter = MarketFilter()
         val locale = null
-        val maxResults = 1
         val expectedRequest = expectedRequest(
             method, sessionToken, appKey, mapOf(
                 Pair("filter", marketFilter),
-                Pair("locale", locale),
-                Pair("maxResults", maxResults.toString())
+                Pair("locale", locale)
             )
         )
 
@@ -299,7 +282,7 @@ class BettingTest : StringSpec({
         every { response.isSuccessful } returns true
 
         val betting = Betting(clientMock)
-        val result = betting.listEvents(marketFilter, locale, maxResults, sessionToken, appKey)
+        val result = betting.listEvents(marketFilter, locale, sessionToken, appKey)
 
         slot.captured.body?.contentLength() shouldBe expectedRequest.body?.contentLength()
         slot.captured.headers shouldBe expectedRequest.headers
@@ -318,7 +301,6 @@ class BettingTest : StringSpec({
             Betting(clientMock).listEvents(
                 filter = MarketFilter(),
                 locale = "locale",
-                maxResults = 1,
                 sessionToken = sessionToken,
                 applicationKey = appKey
             )
@@ -334,7 +316,6 @@ class BettingTest : StringSpec({
             Betting(clientMock).listEvents(
                 filter = MarketFilter(),
                 locale = "locale",
-                maxResults = 1,
                 sessionToken = sessionToken,
                 applicationKey = appKey
             )
@@ -350,12 +331,10 @@ class BettingTest : StringSpec({
         val method = "listMarketTypes"
         val marketFilter = MarketFilter()
         val locale = null
-        val maxResults = 1
         val expectedRequest = expectedRequest(
             method, sessionToken, appKey, mapOf(
                 Pair("filter", marketFilter),
-                Pair("locale", locale),
-                Pair("maxResults", maxResults.toString())
+                Pair("locale", locale)
             )
         )
 
@@ -368,7 +347,7 @@ class BettingTest : StringSpec({
         every { response.isSuccessful } returns true
 
         val betting = Betting(clientMock)
-        val result = betting.listMarketTypes(marketFilter, locale, maxResults, sessionToken, appKey)
+        val result = betting.listMarketTypes(marketFilter, locale, sessionToken, appKey)
 
         slot.captured.body?.contentLength() shouldBe expectedRequest.body?.contentLength()
         slot.captured.headers shouldBe expectedRequest.headers
@@ -387,7 +366,6 @@ class BettingTest : StringSpec({
             Betting(clientMock).listMarketTypes(
                 filter = MarketFilter(),
                 locale = "locale",
-                maxResults = 1,
                 sessionToken = sessionToken,
                 applicationKey = appKey
             )
@@ -403,7 +381,6 @@ class BettingTest : StringSpec({
             Betting(clientMock).listMarketTypes(
                 filter = MarketFilter(),
                 locale = "locale",
-                maxResults = 1,
                 sessionToken = sessionToken,
                 applicationKey = appKey
             )
@@ -419,12 +396,10 @@ class BettingTest : StringSpec({
         val method = "listCountries"
         val marketFilter = MarketFilter()
         val locale = null
-        val maxResults = 1
         val expectedRequest = expectedRequest(
             method, sessionToken, appKey, mapOf(
                 Pair("filter", marketFilter),
-                Pair("locale", locale),
-                Pair("maxResults", maxResults.toString())
+                Pair("locale", locale)
             )
         )
 
@@ -437,7 +412,7 @@ class BettingTest : StringSpec({
         every { response.isSuccessful } returns true
 
         val betting = Betting(clientMock)
-        val result = betting.listCountries(marketFilter, locale, maxResults, sessionToken, appKey)
+        val result = betting.listCountries(marketFilter, locale, sessionToken, appKey)
 
         slot.captured.body?.contentLength() shouldBe expectedRequest.body?.contentLength()
         slot.captured.headers shouldBe expectedRequest.headers
@@ -456,7 +431,6 @@ class BettingTest : StringSpec({
             Betting(clientMock).listCountries(
                 filter = MarketFilter(),
                 locale = "GB",
-                maxResults = 11,
                 sessionToken = sessionToken,
                 applicationKey = appKey
             )
@@ -472,7 +446,6 @@ class BettingTest : StringSpec({
             Betting(clientMock).listCountries(
                 filter = MarketFilter(),
                 locale = "GB",
-                maxResults = 11,
                 sessionToken = sessionToken,
                 applicationKey = appKey
             )
@@ -488,12 +461,10 @@ class BettingTest : StringSpec({
         val method = "listVenues"
         val marketFilter = MarketFilter()
         val locale = null
-        val maxResults = 1
         val expectedRequest = expectedRequest(
             method, sessionToken, appKey, mapOf(
                 Pair("filter", marketFilter),
-                Pair("locale", locale),
-                Pair("maxResults", maxResults.toString())
+                Pair("locale", locale)
             )
         )
 
@@ -506,7 +477,7 @@ class BettingTest : StringSpec({
         every { response.isSuccessful } returns true
 
         val betting = Betting(clientMock)
-        val result = betting.listVenues(marketFilter, locale, maxResults, sessionToken, appKey)
+        val result = betting.listVenues(marketFilter, locale, sessionToken, appKey)
 
         slot.captured.body?.contentLength() shouldBe expectedRequest.body?.contentLength()
         slot.captured.headers shouldBe expectedRequest.headers
@@ -525,7 +496,6 @@ class BettingTest : StringSpec({
             Betting(clientMock).listVenues(
                 filter = MarketFilter(),
                 locale = "GB",
-                maxResults = 11,
                 sessionToken = sessionToken,
                 applicationKey = appKey
             )
@@ -541,7 +511,6 @@ class BettingTest : StringSpec({
             Betting(clientMock).listVenues(
                 filter = MarketFilter(),
                 locale = "GB",
-                maxResults = 11,
                 sessionToken = sessionToken,
                 applicationKey = appKey
             )

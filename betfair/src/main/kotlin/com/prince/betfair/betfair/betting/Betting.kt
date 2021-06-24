@@ -36,12 +36,13 @@ class Betting(
      * @param filter: (required) The filter to select desired markets. All markets that match the criteria in the filter
      * are selected.
      * @param locale: The language used for the response. If not specified, the default is returned.
+     * @param sessionToken: (required) Session token provided by ClientSSO
+     * @param applicationKey: (required) Application key identifying your api client
      * @throws APINGException
      */
     fun listEventTypes(
         filter: MarketFilter,
         locale: String? = null,
-        maxResults: Int? = null,
         sessionToken: String,
         applicationKey: String
     ): List<EventTypeResult> {
@@ -52,7 +53,6 @@ class Betting(
             mapOf(
                 Pair("filter", filter),
                 Pair("locale", locale),
-                Pair("maxResults", maxResults.toString())
             )
         )
 
@@ -69,12 +69,13 @@ class Betting(
      * @param filter: (required) The filter to select desired markets. All markets that match the criteria in the filter
      * are selected.
      * @param locale: The language used for the response. If not specified, the default is returned.
+     * @param sessionToken: (required) Session token provided by ClientSSO
+     * @param applicationKey: (required) Application key identifying your api client
      * @throws APINGException
      */
     fun listCompetitions(
         filter: MarketFilter,
         locale: String? = null,
-        maxResults: Int? = null,
         sessionToken: String,
         applicationKey: String
     ): List<CompetitionResult> {
@@ -85,7 +86,6 @@ class Betting(
             mapOf(
                 Pair("filter", filter),
                 Pair("locale", locale),
-                Pair("maxResults", maxResults.toString())
             )
         )
 
@@ -102,12 +102,13 @@ class Betting(
      * are selected.
      * @param granularity: (required) The granularity of time periods that correspond to markets selected by the market
      * filter.
+     * @param sessionToken: (required) Session token provided by ClientSSO
+     * @param applicationKey: (required) Application key identifying your api client
      * @throws APINGException
      */
     fun listTimeRanges(
         filter: MarketFilter,
         granularity: TimeGranularity,
-        maxResults: Int,
         sessionToken: String,
         applicationKey: String
     ): List<TimeRangeResult> {
@@ -117,8 +118,7 @@ class Betting(
             applicationKey,
             mapOf(
                 Pair("filter", filter),
-                Pair("granularity", granularity),
-                Pair("maxResults", maxResults.toString())
+                Pair("granularity", granularity)
             )
         )
 
@@ -134,12 +134,13 @@ class Betting(
      * @param filter: (required) The filter to select desired markets. All markets that match the criteria in the filter
      * are selected.
      * @param locale: The language used for the response. If not specified, the default is returned.
+     * @param sessionToken: (required) Session token provided by ClientSSO
+     * @param applicationKey: (required) Application key identifying your api client
      * @throws APINGException
      */
     fun listEvents(
         filter: MarketFilter,
         locale: String? = null,
-        maxResults: Int? = null,
         sessionToken: String,
         applicationKey: String
     ): List<EventResult> {
@@ -149,8 +150,7 @@ class Betting(
             applicationKey,
             mapOf(
                 Pair("filter", filter),
-                Pair("locale", locale),
-                Pair("maxResults", maxResults.toString())
+                Pair("locale", locale)
             )
         )
 
@@ -160,7 +160,6 @@ class Betting(
         return objectMapper.readValue(body)
     }
 
-    //TODO Update docs from here (return types)
     /**
      * Returns a list of market types (i.e. MATCH_ODDS, NEXT_GOAL) associated with the markets selected by the
      * MarketFilter. The market types are always the same, regardless of locale.
@@ -168,12 +167,13 @@ class Betting(
      * @param filter: (required) The filter to select desired markets. All markets that match the criteria in the filter
      * are selected.
      * @param locale: The language used for the response. If not specified, the default is returned.
+     * @param sessionToken: (required) Session token provided by ClientSSO
+     * @param applicationKey: (required) Application key identifying your api client
      * @throws APINGException
      */
     fun listMarketTypes(
         filter: MarketFilter,
         locale: String? = null,
-        maxResults: Int? = null,
         sessionToken: String,
         applicationKey: String
     ): List<MarketTypeResult> {
@@ -183,8 +183,7 @@ class Betting(
             applicationKey,
             mapOf(
                 Pair("filter", filter),
-                Pair("locale", locale),
-                Pair("maxResults", maxResults.toString())
+                Pair("locale", locale)
             )
         )
 
@@ -200,12 +199,13 @@ class Betting(
      * @param filter: (required) The filter to select desired markets. All markets that match the criteria in the filter
      * are selected.
      * @param locale: The language used for the response. If not specified, the default is returned.
+     * @param sessionToken: (required) Session token provided by ClientSSO
+     * @param applicationKey: (required) Application key identifying your api client
      * @throws APINGException
      */
     fun listCountries(
         filter: MarketFilter,
         locale: String? = null,
-        maxResults: Int? = null,
         sessionToken: String,
         applicationKey: String
     ): List<CountryCodeResult> {
@@ -215,8 +215,7 @@ class Betting(
             applicationKey,
             mapOf(
                 Pair("filter", filter),
-                Pair("locale", locale),
-                Pair("maxResults", maxResults.toString())
+                Pair("locale", locale)
             )
         )
 
@@ -226,10 +225,20 @@ class Betting(
         return objectMapper.readValue(body)
     }
 
+    /**
+     * Returns a list of Venues (i.e. Cheltenham, Ascot) associated with the markets selected by the MarketFilter.
+     * Currently, only Horse Racing markets are associated with a Venue.
+     *
+     * @param filter: (required) The filter to select desired markets. All markets that match the criteria in the filter
+     * are selected.
+     * @param locale: The language used for the response. If not specified, the default is returned.
+     * @param sessionToken: (required) Session token provided by ClientSSO
+     * @param applicationKey: (required) Application key identifying your api client
+     * @throws APINGException
+     */
     fun listVenues(
         filter: MarketFilter,
         locale: String? = null,
-        maxResults: Int? = null,
         sessionToken: String,
         applicationKey: String
     ): List<VenueResult> {
@@ -239,8 +248,7 @@ class Betting(
             applicationKey,
             mapOf(
                 Pair("filter", filter),
-                Pair("locale", locale),
-                Pair("maxResults", maxResults.toString())
+                Pair("locale", locale)
             )
         )
 
@@ -250,6 +258,29 @@ class Betting(
         return objectMapper.readValue(body)
     }
 
+    /**
+     * Returns a list of information about published (ACTIVE/SUSPENDED) markets that does not change (or changes very
+     * rarely). You use listMarketCatalogue to retrieve the name of the market, the names of selections and other
+     * information about markets.  Market Data Request Limits apply to requests made to listMarketCatalogue.
+     *
+     * Please note: listMarketCatalogue does not return markets that are CLOSED.
+     *
+     * @param filter: (required) The filter to select desired markets. All markets that match the criteria in the filter
+     * are selected.
+     * @param marketProjection: The type and amount of data returned about the market.
+     * @param sort: The order of the results. Will default to RANK if not passed. RANK is an assigned priority that is
+     * determined by our Market Operations team in our back-end system. A result's overall rank is derived from the
+     * ranking given to the flowing attributes for the result. EventType, Competition, StartTime, MarketType, MarketId.
+     * For example, EventType is ranked by the most popular sports types and marketTypes are ranked in the following
+     * order: ODDS ASIAN LINE RANGE If all other dimensions of the result are equal, then the results are ranked in
+     * MarketId order.
+     * @param maxResults: (required) limit on the total number of results returned, must be greater than 0 and less than
+     * or equal to 1000
+     * @param locale: The language used for the response. If not specified, the default is returned.
+     * @param sessionToken: (required) Session token provided by ClientSSO
+     * @param applicationKey: (required) Application key identifying your api client
+     * @throws APINGException
+     */
     fun listMarketCatalogue(
         filter: MarketFilter,
         marketProjection: Set<MarketProjection>? = null,
@@ -303,6 +334,9 @@ class Betting(
      * @param betIds: If you ask for orders, restricts the results to orders with the specified bet IDs. Omitting this
      * parameter means that all bets will be included in the response. Please note: A maximum of 250 betId's can be
      * provided at a time.
+     * @param sessionToken: (required) Session token provided by ClientSSO
+     * @param applicationKey: (required) Application key identifying your api client
+     * @throws APINGException
      */
     fun listMarketBook(
         marketIds: List<String>,
@@ -375,6 +409,8 @@ class Betting(
      * @param betIds: If you ask for orders, restricts the results to orders with the specified bet IDs. Omitting this
      * parameter means that all bets will be included in the response. Please note: A maximum of 250 betId's can be
      * provided at a time.
+     * @param sessionToken: (required) Session token provided by ClientSSO
+     * @param applicationKey: (required) Application key identifying your api client
      * @throws APINGException
      */
     fun listRunnerBook(
@@ -434,6 +470,8 @@ class Betting(
      * @param includeBspBets: Option to include BSP bets. Defaults to false if not specified.
      * @param netOfCommission: Option to return profit and loss net of users current commission rate for this market
      * including any special tariffs. Defaults to false if not specified.
+     * @param sessionToken: (required) Session token provided by ClientSSO
+     * @param applicationKey: (required) Application key identifying your api client
      * @throws APINGException
      */
     fun listMarketProfitAndLoss(
@@ -500,6 +538,8 @@ class Betting(
      * @param recordCount: Specifies how many records will be returned from the index position 'fromRecord'. Note that
      * there is a page size limit of 1000. A value of zero indicates that you would like all records (including and from
      * 'fromRecord') up to the limit.
+     * @param sessionToken: (required) Session token provided by ClientSSO
+     * @param applicationKey: (required) Application key identifying your api client
      * @throws APINGException
      */
     fun listCurrentOrders(
@@ -574,6 +614,8 @@ class Betting(
      * @param recordCount: Specifies how many records will be returned, from the index position 'fromRecord'. Note that
      * there is a page size limit of 1000. A value of zero indicates that you would like all records (including and from
      * 'fromRecord') up to the limit.
+     * @param sessionToken: (required) Session token provided by ClientSSO
+     * @param applicationKey: (required) Application key identifying your api client
      * @throws APINGException
      */
     fun listClearedOrders(
@@ -648,6 +690,8 @@ class Betting(
      * asynchronously. Orders can be tracked via the Exchange Stream API or or the API-NG by providing a
      * customerOrderRef for each place order. An order's status will be PENDING and no bet ID will be returned. This
      * functionality is available for all bet types - including Market on Close and Limit on Close
+     * @param sessionToken: (required) Session token provided by ClientSSO
+     * @param applicationKey: (required) Application key identifying your api client
      * @throws APINGException
      */
     fun placeOrders(
@@ -691,6 +735,8 @@ class Betting(
      * market (if market id is passed) are fully cancelled.  The limit of cancel instructions per request is 60
      * @param customerRef: Optional parameter allowing the client to pass a unique string (up to 32 chars) that is used
      * to de-dupe mistaken re-submissions.
+     * @param sessionToken: (required) Session token provided by ClientSSO
+     * @param applicationKey: (required) Application key identifying your api client
      * @throws APINGException
      */
     fun cancelOrders(
@@ -733,6 +779,8 @@ class Betting(
      * @param async: An optional flag (not setting equates to false) which specifies if the orders should be replaced
      * asynchronously. Orders can be tracked via the Exchange Stream API or the API-NG by providing a customerOrderRef
      * for each replace order. Not available for MOC or LOC bets.
+     * @param sessionToken: (required) Session token provided by ClientSSO
+     * @param applicationKey: (required) Application key identifying your api client
      * @throws APINGException
      */
     fun replaceOrders(
@@ -771,6 +819,9 @@ class Betting(
      * is 60
      * @param customerRef: Optional parameter allowing the client to pass a unique string (up to 32 chars) that is used
      * to de-dupe mistaken re-submissions.
+     * @param sessionToken: (required) Session token provided by ClientSSO
+     * @param applicationKey: (required) Application key identifying your api client
+     * @throws APINGException
      */
     fun updateOrders(
         marketId: String,

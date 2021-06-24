@@ -43,7 +43,9 @@ class AccountsTest: StringSpec({
             true,
             true,
             true,
-            true
+            true,
+            null,
+            null
         )
         val expectedDeveloperApp = DeveloperApp(
             "appName",
@@ -116,7 +118,7 @@ class AccountsTest: StringSpec({
         every { response.isSuccessful  } returns true
 
         val account = Accounts(clientMock)
-        val result = account.getAccountFunds(sessionToken, appKey, walletMock)
+        val result = account.getAccountFunds(walletMock, sessionToken, appKey)
 
         verify { walletMock.location.toString() }
 
@@ -132,7 +134,7 @@ class AccountsTest: StringSpec({
 
         val account = Accounts(clientMock)
         val exception = shouldThrow<AccountAPINGException> {
-            account.getAccountFunds(sessionToken, appKey, walletMock)
+            account.getAccountFunds(walletMock, sessionToken, appKey)
         }
 
         verify { walletMock.location.toString() }
@@ -149,7 +151,7 @@ class AccountsTest: StringSpec({
 
         val account = Accounts(clientMock)
         val exception = shouldThrow<AccountAPINGException> {
-            account.getAccountFunds(sessionToken, appKey, walletMock)
+            account.getAccountFunds(walletMock, sessionToken, appKey)
         }
 
         verify { walletMock.location.toString() }

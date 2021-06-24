@@ -16,6 +16,12 @@ class Accounts(
     private val objectMapper = JacksonConfiguration().mapper()
     private val accountUrl = "https://api.betfair.com/exchange/account/rest/v1.0/"
 
+    /**
+     * Get all application keys owned by the given developer/vendor
+     *
+     * @param sessionToken: (required) Session token provided by ClientSSO
+     * @throws AccountAPINGException
+     */
     fun getDeveloperAppKeys(sessionToken: String): List<DeveloperApp> {
         val request = Request.Builder()
             .url("${accountUrl}getDeveloperAppKeys/")
@@ -35,7 +41,13 @@ class Accounts(
         return objectMapper.readValue(body)
     }
 
-    fun getAccountFunds(sessionToken: String, applicationKey: String, wallet: Wallet): AccountFundsResponse {
+    /**
+     * Returns the available to bet amount, exposure and commission information.
+     *
+     * @param wallet: Name of the wallet in question. Global wallet is returned by default
+     * @throws AccountAPINGException
+     */
+    fun getAccountFunds(wallet: Wallet, sessionToken: String, applicationKey: String): AccountFundsResponse {
         val request = Request.Builder()
             .url("${accountUrl}getAccountFunds/")
             .addHeader("X-Authentication", sessionToken)
