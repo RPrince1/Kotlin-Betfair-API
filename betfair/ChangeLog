@@ -9,10 +9,9 @@ X - BB-8 Write tests for new structure
 X - BB-9 Implement Betting operations
 X - BB-10 Convert to Library
 X - BB-11 Update documentation
+X - BB-12 Add Heartbeat API
 
 // List of tickets to do
-Review entities, nullability
-Add Heartbeat API
 Update test request responses to include all fields
 Update accounts test
 Review repetition in tests
